@@ -1,0 +1,86 @@
+package com.rbkmoney.binbase.dao;
+
+import com.google.common.collect.Range;
+import com.rbkmoney.binbase.AbstractIntegrationTest;
+import com.rbkmoney.binbase.domain.BinData;
+import com.rbkmoney.binbase.domain.BinRange;
+import com.rbkmoney.binbase.exception.DaoException;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
+import static org.junit.Assert.assertEquals;
+
+@Transactional
+public class BinRangeDaoTest extends AbstractIntegrationTest {
+
+    @Autowired
+    private BinRangeDao binRangeDao;
+
+    @Autowired
+    private BinDataDao binDataDao;
+
+    @Test
+    public void testSaveAndGetByCardPanAndRange() throws DaoException {
+        BinData binData = random(BinData.class);
+        long binDataId = binDataDao.save(binData);
+
+        BinRange binRange = new BinRange();
+        binRange.setRange(Range.openClosed(1000000000000000000L, 2000000000000000000L));
+        binRange.setVersionId(1L);
+        binRange.setBinDataId(binDataId);
+        binRangeDao.save(binRange);
+        assertEquals(binRange, binRangeDao.getIntersectionRanges(binRange.getRange()).get(0));
+        assertEquals(binRange, binRangeDao.getBinRangeByCardPan(1230679997775486545L));
+        assertEquals(binRange, binRangeDao.getBinRangeByCardPanAndVersion(1230679997775486545L, 1));
+    }
+
+    @Test(expected = DaoException.class)
+    public void testWhenRangesConflict() throws DaoException {
+        BinData binData = random(BinData.class);
+        long binDataId = binDataDao.save(binData);
+
+        BinRange binRange = new BinRange();
+        binRange.setRange(Range.openClosed(1000000000000000000L, 2000000000000000000L));
+        binRange.setVersionId(1L);
+        binRange.setBinDataId(binDataId);
+        binRangeDao.save(binRange);
+
+        binRange.setRange(Range.openClosed(1500000000000000000L, 2500000000000000000L));
+        binRangeDao.save(binRange);
+    }
+
+    @Test
+    public void testBatchInsertBinRanges() throws DaoException {
+        BinData binData = random(BinData.class);
+        long binDataId = binDataDao.save(binData);
+        binRangeDao.save(
+                Arrays.asList(
+                        new BinRange(1000000000000000000L, 2000000000000000000L, 1L, binDataId),
+                        new BinRange(2000000000000000000L, 3000000000000000000L, 1L, binDataId),
+                        new BinRange(3000000000000000000L, 4000000000000000000L, 1L, binDataId)
+                )
+        );
+
+    }
+
+//    @Test
+//    public void testGetIntersectionRange() throws DaoException {
+//        BinData binData = random(BinData.class);
+//        long binDataId = binDataDao.save(binData);
+//
+//        BinRange binRange = new BinRange();
+//        binRange.setRange(Range.openClosed(1000000000000000000L, 2000000000000000000L));
+//        binRange.setVersionId(1L);
+//        binRange.setBinDataId(binDataId);
+//        binRangeDao.save(binRange);
+//
+//        binRange.setVersionId(2L);
+//        binRangeDao.save(binRange);
+//
+//        System.out.println(binRangeDao.getIntersectionRanges(binRange.getRange()));
+//    }
+}
