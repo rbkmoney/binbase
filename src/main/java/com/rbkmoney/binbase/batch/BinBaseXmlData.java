@@ -3,7 +3,7 @@ package com.rbkmoney.binbase.batch;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
-@XmlRootElement(name="record")
+@XmlRootElement(name = "record")
 public class BinBaseXmlData {
 
     private String bin;

@@ -1,7 +1,7 @@
 package com.rbkmoney.binbase.dao;
 
-import com.rbkmoney.binbase.exception.DaoException;
 import com.rbkmoney.binbase.domain.BinData;
+import com.rbkmoney.binbase.exception.DaoException;
 
 import java.util.Map;
 

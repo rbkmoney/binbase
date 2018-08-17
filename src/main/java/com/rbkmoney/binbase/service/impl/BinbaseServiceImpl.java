@@ -27,6 +27,10 @@ import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 @Service
 public class BinbaseServiceImpl implements BinbaseService {
 
+    private final long MIN_LOWER_ENDPOINT = (long) Math.pow(10, 17);
+
+    private final long MAX_UPPER_ENDPOINT = (long) Math.pow(10, 18) - 1;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final BinRangeDao binRangeDao;
@@ -65,9 +69,13 @@ public class BinbaseServiceImpl implements BinbaseService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void saveRange(BinData binData, Range<Long> range) throws StorageException {
+    public void saveRange(BinData binData, Range<Long> range) throws StorageException, IllegalArgumentException {
         log.info("Trying to save bin range, binData='{}', range='{}'", binData, range);
         try {
+            if (range.lowerEndpoint() < MIN_LOWER_ENDPOINT || range.upperEndpoint() > MAX_UPPER_ENDPOINT) {
+                throw new IllegalArgumentException(String.format("Incorrect range, range='%s'", range));
+            }
+
             long binDataId = saveBinData(binData);
             List<BinRange> lastIntersectionRanges = getLastIntersectionBinRanges(range);
 

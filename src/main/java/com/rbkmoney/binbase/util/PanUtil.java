@@ -11,7 +11,7 @@ public class PanUtil {
 
     public static long toLongValue(String pan) throws IllegalArgumentException {
         validatePan(pan);
-        return Long.valueOf(String.format("%-19s", pan).replace(' ', '0'));
+        return Long.valueOf(String.format("%-18s", pan.substring(0, Math.min(pan.length(), 18))).replace(' ', '0'));
     }
 
 }

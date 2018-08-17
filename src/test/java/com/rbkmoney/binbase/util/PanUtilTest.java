@@ -35,10 +35,11 @@ public class PanUtilTest {
 
     @Test
     public void testToLongValue() {
-        assertEquals(2200200000000000000L, toLongValue("220020"));
-        assertEquals(2200123232000000000L, toLongValue("22001232320"));
-        assertEquals(2342342342342342340L, toLongValue("234234234234234234"));
-        assertEquals(3242342342342344324L, toLongValue("3242342342342344324"));
+        assertEquals(220020000000000000L, toLongValue("220020"));
+        assertEquals(220012323200000000L, toLongValue("22001232320"));
+        assertEquals(234234234234234234L, toLongValue("234234234234234234"));
+        assertEquals(324234234234234432L, toLongValue("3242342342342344324"));
+        assertEquals(999999999999999999L, toLongValue("9999999999999999999"));
     }
 
 }

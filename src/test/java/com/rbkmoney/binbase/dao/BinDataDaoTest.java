@@ -1,6 +1,5 @@
 package com.rbkmoney.binbase.dao;
 
-import com.google.common.collect.Range;
 import com.rbkmoney.binbase.AbstractIntegrationTest;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.domain.BinRange;
