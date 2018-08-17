@@ -42,51 +42,92 @@ public class BinbaseServiceImpl implements BinbaseService {
     @Override
     public Map.Entry<Long, BinData> getBinDataByCardPan(String pan) throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
-            return binDataDao.getBinDataByCardPan(toLongValue(pan));
+            log.info("Trying to get bin data by pan, pan='{}'", pan);
+            Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPan(toLongValue(pan));
+            log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'", pan, binDataWithVersion);
+            return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(ex);
+            throw new StorageException(String.format("Failed to get bin data by card pan, pan='%s'", pan), ex);
         }
     }
 
     @Override
     public Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(String pan, long version) throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
-            return binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
+            log.info("Trying to get bin data by pan and version, pan='{}', version='{}'", pan, version);
+            Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
+            log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'", pan, version, binDataWithVersion);
+            return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by card pan and version, cardPan='%s', version='%d'", pan, version), ex);
+            throw new StorageException(String.format("Failed to get bin data by card pan and version, pan='%s', version='%d'", pan, version), ex);
         }
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveRange(BinData binData, Range<Long> range) throws StorageException {
+        log.info("Trying to save bin range, binData='{}', range='{}'", binData, range);
         try {
-            long binDataId = binDataDao.save(binData);
-            List<BinRange> lastIntersectionRanges = BinRangeUtil.getLastIntersectionRanges(binRangeDao.getIntersectionRanges(range));
+            long binDataId = saveBinData(binData);
+            List<BinRange> lastIntersectionRanges = getLastIntersectionBinRanges(range);
 
             List<Range<Long>> intersectionRanges = new ArrayList<>();
             List<BinRange> newBinRanges = new ArrayList<>();
             for (BinRange intersectionRange : lastIntersectionRanges) {
                 if (intersectionRange.getRange().isConnected(range)
                         && !intersectionRange.getRange().intersection(range).isEmpty()) {
-                    intersectionRanges.add(intersectionRange.getRange());
+                    Range<Long> newIntersectRange = intersectionRange.getRange().intersection(range);
+                    intersectionRanges.add(newIntersectRange);
                     if (intersectionRange.getBinDataId().equals(binDataId)) {
+                        log.info("Range of intersections with same data was found, binData='{}', range='{}', intersectionRange='{}'. Skipped...", binData, range, intersectionRange);
                         continue;
                     }
-                    Range<Long> intersectRange = intersectionRange.getRange().intersection(range);
-                    newBinRanges.add(new BinRange(intersectRange, intersectionRange.getVersionId() + 1L, binDataId));
+                    newBinRanges.add(new BinRange(newIntersectRange, intersectionRange.getVersionId() + 1L, binDataId));
                 }
             }
+            if (!newBinRanges.isEmpty()) {
+                log.info("Ranges with new version was created, binData='{}', range='{}', rangesWithNewVersion='{}'", binData, range, newBinRanges);
+            }
 
-            List<BinRange> otherRanges = BinRangeUtil.subtractFromRange(range, intersectionRanges)
-                    .stream().map(
+            List<BinRange> otherRanges = BinRangeUtil.subtractFromRange(range, intersectionRanges).stream()
+                    .map(
                             subtractRange -> new BinRange(subtractRange, 1L, binDataId)
                     ).collect(Collectors.toList());
-            newBinRanges.addAll(otherRanges);
+            if (!otherRanges.isEmpty()) {
+                log.info("New ranges was created, binData='{}', range='{}', newRanges='{}'", binData, range, otherRanges);
+                newBinRanges.addAll(otherRanges);
+            }
 
             binRangeDao.save(newBinRanges);
+            log.info("Bin range have been saved, binData='{}', binRanges='{}'", binData, newBinRanges);
         } catch (DaoException ex) {
             throw new StorageException(String.format("Failed to save range, binData='%s', range='%s'", binData, range), ex);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public long saveBinData(BinData binData) throws StorageException {
+        try {
+            log.info("Trying to save bin data, binData='{}'", binData);
+            long id = binDataDao.save(binData);
+            log.info("Bin data have been saved, id='{}', binData='{}'", id, binData);
+            return id;
+        } catch (DaoException ex) {
+            throw new StorageException(String.format("Failed to save bin data, binData='%s'", binData), ex);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<BinRange> getLastIntersectionBinRanges(Range<Long> range) throws StorageException {
+        try {
+            log.info("Trying to get last ranges of intersections, range='{}'", range);
+            List<BinRange> lastIntersectionRanges = BinRangeUtil.getLastIntersectionRanges(binRangeDao.getIntersectionRanges(range));
+            log.info("Last ranges of intersections have been retrieved, range='{}', lastIntersectionRanges='{}'", range, lastIntersectionRanges);
+            return lastIntersectionRanges;
+        } catch (DaoException ex) {
+            throw new StorageException(String.format("Failed to get last ranges of intersections, range='%s'", range), ex);
         }
     }
 
