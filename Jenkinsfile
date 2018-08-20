@@ -32,8 +32,8 @@ build('binbase', 'java-maven') {
                 docker.withRegistry('https://dr.rbkmoney.com/v2/', 'dockerhub-rbkmoneycibot') {
                     serviceImage.push();
                 }
-                // Push under 'withRegistry' generates 2d record with 'long name' in local docker registry.
-                // Untag the long-name
+                // Push under 'withRegistry' generates 2d record with 'long filename' in local docker registry.
+                // Untag the long-filename
                 sh "docker rmi dr.rbkmoney.com/${imgShortName}"
             }
         }

@@ -8,10 +8,6 @@ import java.util.List;
 
 public interface BinRangeDao {
 
-    BinRange getBinRangeByCardPan(long pan) throws DaoException;
-
-    BinRange getBinRangeByCardPanAndVersion(long pan, int versionId) throws DaoException;
-
     List<BinRange> getIntersectionRanges(Range<Long> range) throws DaoException;
 
     long save(BinRange binRange) throws DaoException;

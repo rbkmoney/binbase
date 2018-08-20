@@ -4,6 +4,7 @@ import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.exception.BinNotFoundException;
 import com.rbkmoney.binbase.service.BinbaseService;
 import com.rbkmoney.damsel.binbase.*;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class BinbaseHandler implements BinbaseSrv.Iface {
@@ -26,6 +28,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
 
     @Override
     public ResponseData lookup(String pan, Reference reference) throws BinNotFound, TException {
+        log.info("Lookup bin data, pan='{}', reference='{}'", pan, reference);
         try {
             Map.Entry<Long, BinData> binDataWithVersion;
             if (reference.isSetLast()) {
@@ -33,8 +36,11 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
             } else {
                 binDataWithVersion = binbaseService.getBinDataByCardPanAndVersion(pan, reference.getVersion());
             }
-            return toResponseData(binDataWithVersion);
+            ResponseData responseData = toResponseData(binDataWithVersion);
+            log.info("Lookup result: {}, pan='{}', reference='{}'", responseData, pan, reference);
+            return responseData;
         } catch (BinNotFoundException | IllegalArgumentException ex) {
+            log.info("Cannot lookup bin data, pan='{}', reference='{}'", pan, reference, ex);
             throw new BinNotFound();
         }
     }
@@ -46,8 +52,19 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
         com.rbkmoney.damsel.binbase.BinData damselBinData = new com.rbkmoney.damsel.binbase.BinData();
         damselBinData.setPaymentSystem(binData.getPaymentSystem());
         damselBinData.setBankName(binData.getBankName());
-        damselBinData.setCardType(CardType.valueOf(binData.getCardType()));
-        damselBinData.setIsoCountryCode(binData.getIsoCountryCode());
+        damselBinData.setCardType(
+                TypeUtil.toEnumField(
+                        Optional.ofNullable(binData.getCardType())
+                                .map(cardType -> cardType.toString())
+                                .orElse(null),
+                        CardType.class
+                )
+        );
+        damselBinData.setIsoCountryCode(
+                Optional.ofNullable(binData.getIsoCountryCode())
+                        .map(countryCode -> countryCode.getNumeric())
+                        .orElse(null)
+        );
         return new ResponseData(damselBinData, versionId);
     }
 

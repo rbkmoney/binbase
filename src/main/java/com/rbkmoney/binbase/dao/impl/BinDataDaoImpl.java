@@ -2,7 +2,10 @@ package com.rbkmoney.binbase.dao.impl;
 
 import com.rbkmoney.binbase.dao.BinDataDao;
 import com.rbkmoney.binbase.domain.BinData;
+import com.rbkmoney.binbase.domain.CardType;
+import com.rbkmoney.binbase.domain.CountryCode;
 import com.rbkmoney.binbase.exception.DaoException;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +21,7 @@ import org.springframework.util.StringUtils;
 import javax.sql.DataSource;
 import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinDataDao {
@@ -25,8 +29,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     private final RowMapper<BinData> binDataRowMapper = (rs, i) -> new BinData(
             rs.getString("payment_system"),
             StringUtils.hasText(rs.getString("bank_name")) ? rs.getString("bank_name") : null,
-            StringUtils.hasText(rs.getString("iso_country_code")) ? rs.getString("iso_country_code") : null,
-            StringUtils.hasText(rs.getString("card_type")) ? rs.getString("card_type") : null
+            CountryCode.getByNumericCode(rs.getString("iso_country_code")),
+            StringUtils.hasText(rs.getString("card_type")) ? TypeUtil.toEnumField(rs.getString("card_type"), CardType.class) : null
     );
 
     @Autowired
@@ -99,14 +103,22 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
                             new MapSqlParameterSource()
                                     .addValue("payment_system", binData.getPaymentSystem())
                                     .addValue("bank_name", binData.getBankName())
-                                    .addValue("card_type", binData.getCardType())
-                                    .addValue("iso_country_code", binData.getIsoCountryCode()),
+                                    .addValue(
+                                            "card_type",
+                                            Optional.ofNullable(binData.getCardType())
+                                                    .map(cardType -> cardType.toString())
+                                                    .orElse(null)
+                                    )
+                                    .addValue("iso_country_code",
+                                            Optional.ofNullable(binData.getIsoCountryCode())
+                                                    .map(countryCode -> countryCode.getNumeric())
+                                                    .orElse(null)),
                             keyHolder
                     );
             if (rowsAffected != 1) {
                 throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(namedSql, 1, rowsAffected);
             }
-            return keyHolder.getKey().intValue();
+            return keyHolder.getKey().longValue();
         } catch (NestedRuntimeException ex) {
             throw new DaoException(ex);
         }

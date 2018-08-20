@@ -5,6 +5,7 @@ import com.rbkmoney.binbase.AbstractIntegrationTest;
 import com.rbkmoney.binbase.domain.BinData;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Random;
@@ -13,6 +14,7 @@ import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.junit.Assert.assertEquals;
 
+@Transactional
 public class BinbaseServiceTest extends AbstractIntegrationTest {
 
     @Autowired

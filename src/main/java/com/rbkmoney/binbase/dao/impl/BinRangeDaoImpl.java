@@ -6,7 +6,6 @@ import com.rbkmoney.binbase.domain.BinRange;
 import com.rbkmoney.binbase.exception.DaoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,42 +33,6 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
     @Autowired
     public BinRangeDaoImpl(DataSource dataSource) {
         setDataSource(dataSource);
-    }
-
-    @Override
-    public BinRange getBinRangeByCardPan(long pan) throws DaoException {
-        try {
-            String namedSql = "SELECT lower(range) as lower, upper(range) as upper, version_id, bin_data_id FROM binbase.bin_range WHERE range @> :pan ORDER BY version_id DESC LIMIT 1";
-            return getNamedParameterJdbcTemplate()
-                    .queryForObject(
-                            namedSql,
-                            new MapSqlParameterSource("pan", pan),
-                            binRangeRowMapper
-                    );
-        } catch (EmptyResultDataAccessException ex) {
-            return null;
-        } catch (NestedRuntimeException ex) {
-            throw new DaoException(ex);
-        }
-    }
-
-    @Override
-    public BinRange getBinRangeByCardPanAndVersion(long pan, int versionId) throws DaoException {
-        try {
-            String namedSql = "SELECT lower(range) as lower, upper(range) AS upper, version_id, bin_data_id FROM binbase.bin_range WHERE range @> :pan AND version_id = :version_id";
-            return getNamedParameterJdbcTemplate()
-                    .queryForObject(
-                            namedSql,
-                            new MapSqlParameterSource()
-                                    .addValue("pan", pan)
-                                    .addValue("version_id", versionId),
-                            binRangeRowMapper
-                    );
-        } catch (EmptyResultDataAccessException ex) {
-            return null;
-        } catch (NestedRuntimeException ex) {
-            throw new DaoException(ex);
-        }
     }
 
     @Override
@@ -107,7 +70,7 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
             if (rowsAffected != 1) {
                 throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(namedSql, 1, rowsAffected);
             }
-            return keyHolder.getKey().intValue();
+            return keyHolder.getKey().longValue();
         } catch (NestedRuntimeException ex) {
             throw new DaoException(ex);
         }

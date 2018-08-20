@@ -34,8 +34,6 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
         binRange.setBinDataId(binDataId);
         binRangeDao.save(binRange);
         assertEquals(binRange, binRangeDao.getIntersectionRanges(binRange.getRange()).get(0));
-        assertEquals(binRange, binRangeDao.getBinRangeByCardPan(1230679997775486545L));
-        assertEquals(binRange, binRangeDao.getBinRangeByCardPanAndVersion(1230679997775486545L, 1));
     }
 
     @Test(expected = DaoException.class)

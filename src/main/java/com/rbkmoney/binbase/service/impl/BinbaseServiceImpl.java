@@ -27,10 +27,6 @@ import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 @Service
 public class BinbaseServiceImpl implements BinbaseService {
 
-    private final long MIN_LOWER_ENDPOINT = (long) Math.pow(10, 17);
-
-    private final long MAX_UPPER_ENDPOINT = (long) Math.pow(10, 18) - 1;
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final BinRangeDao binRangeDao;
@@ -48,6 +44,9 @@ public class BinbaseServiceImpl implements BinbaseService {
         try {
             log.info("Trying to get bin data by pan, pan='{}'", pan);
             Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPan(toLongValue(pan));
+            if (binDataWithVersion == null) {
+                throw new BinNotFoundException(String.format("Bin data not found, pan='%s'", pan));
+            }
             log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'", pan, binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
@@ -60,6 +59,9 @@ public class BinbaseServiceImpl implements BinbaseService {
         try {
             log.info("Trying to get bin data by pan and version, pan='{}', version='{}'", pan, version);
             Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
+            if (binDataWithVersion == null) {
+                throw new BinNotFoundException(String.format("Bin data not found, pan='%s', version='%d'", pan, version));
+            }
             log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'", pan, version, binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
@@ -106,8 +108,12 @@ public class BinbaseServiceImpl implements BinbaseService {
                 newBinRanges.addAll(otherRanges);
             }
 
-            binRangeDao.save(newBinRanges);
-            log.info("Bin range have been saved, binData='{}', binRanges='{}'", binData, newBinRanges);
+            if (!newBinRanges.isEmpty()) {
+                binRangeDao.save(newBinRanges);
+                log.info("Bin range have been saved, binData='{}', binRanges='{}'", binData, newBinRanges);
+            } else {
+                log.info("No new ranges were created, nothing to save, binData='{}', binRanges='{}'", binData, newBinRanges);
+            }
         } catch (DaoException ex) {
             throw new StorageException(String.format("Failed to save range, binData='%s', range='%s'", binData, range), ex);
         }

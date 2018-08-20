@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <record>
+        <bin>100001</bin>
+        <brand>PRIVATE LABEL</brand>
+        <bank>CENTRAL SUPPLIES - TDFS</bank>
+        <type></type>
+        <category></category>
+        <isoname>CANADA</isoname>
+        <isoa2>CA</isoa2>
+        <isoa3>CAN</isoa3>
+        <isonumber>124</isonumber>
+        <url></url>
+        <phone></phone>
+    </record>
+    <record>
+        <bin>100115</bin>
+        <brand>UATP</brand>
+        <bank></bank>
+        <type></type>
+        <category></category>
+        <isoname></isoname>
+        <isoa2></isoa2>
+        <isoa3></isoa3>
+        <isonumber>0</isonumber>
+        <url></url>
+        <phone></phone>
+    </record>
+</root>

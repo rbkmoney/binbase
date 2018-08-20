@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <record>
+        <bin>100001</bin>
+        <brand>PRIVATE LABEL</brand>
+        <bank>CENTRAL SUPPLIES - TDFS</bank>
+        <type>DEBIT OR CREDIT</type>
+        <category></category>
+        <isoname>CANADA</isoname>
+        <isoa2>US</isoa2>
+        <isoa3>USA</isoa3>
+        <isonumber>840</isonumber>
+        <url></url>
+        <phone></phone>
+    </record>
+    <record>
+        <bin>100117</bin>
+        <brand>UATP</brand>
+        <bank>AMERICAN AIRLINES (AA)</bank>
+        <type>CREDIT</type>
+        <category></category>
+        <isoname>UNITED STATES</isoname>
+        <isoa2>US</isoa2>
+        <isoa3>USA</isoa3>
+        <isonumber>840</isonumber>
+        <url></url>
+        <phone></phone>
+    </record>
+</root>

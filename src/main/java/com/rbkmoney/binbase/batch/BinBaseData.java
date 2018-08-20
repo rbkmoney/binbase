@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @XmlRootElement(name = "record")
-public class BinBaseXmlData {
+public class BinBaseData {
 
     private String bin;
 
@@ -120,7 +120,7 @@ public class BinBaseXmlData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BinBaseXmlData that = (BinBaseXmlData) o;
+        BinBaseData that = (BinBaseData) o;
         return Objects.equals(bin, that.bin) &&
                 Objects.equals(brand, that.brand) &&
                 Objects.equals(bank, that.bank) &&

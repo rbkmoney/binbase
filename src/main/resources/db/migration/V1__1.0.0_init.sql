@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE SCHEMA IF NOT EXISTS binbase;
 
 CREATE TABLE binbase.bin_data (
-  id               SERIAL            NOT NULL,
+  id               BIGSERIAL         NOT NULL,
   payment_system   CHARACTER VARYING NOT NULL,
   bank_name        CHARACTER VARYING NOT NULL,
   iso_country_code CHARACTER VARYING NOT NULL,

@@ -16,9 +16,7 @@ public class BinRange {
     }
 
     public BinRange(Long lowerEndpoint, Long upperEndpoint, Long versionId, Long binDataId) {
-        this.range = Range.openClosed(lowerEndpoint, upperEndpoint);
-        this.versionId = versionId;
-        this.binDataId = binDataId;
+        this(Range.openClosed(lowerEndpoint, upperEndpoint), versionId, binDataId);
     }
 
     public BinRange(Range<Long> range, Long versionId, Long binDataId) {

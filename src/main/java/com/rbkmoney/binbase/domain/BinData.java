@@ -8,14 +8,14 @@ public class BinData {
 
     private String bankName;
 
-    private String isoCountryCode;
+    private CountryCode isoCountryCode;
 
-    private String cardType;
+    private CardType cardType;
 
     public BinData() {
     }
 
-    public BinData(String paymentSystem, String bankName, String isoCountryCode, String cardType) {
+    public BinData(String paymentSystem, String bankName, CountryCode isoCountryCode, CardType cardType) {
         this.paymentSystem = paymentSystem;
         this.bankName = bankName;
         this.isoCountryCode = isoCountryCode;
@@ -38,19 +38,19 @@ public class BinData {
         this.bankName = bankName;
     }
 
-    public String getIsoCountryCode() {
+    public CountryCode getIsoCountryCode() {
         return isoCountryCode;
     }
 
-    public void setIsoCountryCode(String isoCountryCode) {
+    public void setIsoCountryCode(CountryCode isoCountryCode) {
         this.isoCountryCode = isoCountryCode;
     }
 
-    public String getCardType() {
+    public CardType getCardType() {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
+    public void setCardType(CardType cardType) {
         this.cardType = cardType;
     }
 
