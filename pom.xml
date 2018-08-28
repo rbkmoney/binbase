@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>binbase-proto</artifactId>
-            <version>1.4-8c756e7</version>
+            <version>1.2-a26e028</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney.geck</groupId>

@@ -2,6 +2,7 @@ package com.rbkmoney.binbase.util;
 
 import org.junit.Test;
 
+import static com.rbkmoney.binbase.util.PanUtil.formatPan;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 import static com.rbkmoney.binbase.util.PanUtil.validatePan;
 import static org.junit.Assert.assertEquals;
@@ -40,6 +41,16 @@ public class PanUtilTest {
         assertEquals(234234234234234234L, toLongValue("234234234234234234"));
         assertEquals(324234234234234432L, toLongValue("3242342342342344324"));
         assertEquals(999999999999999999L, toLongValue("9999999999999999999"));
+    }
+
+    @Test
+    public void testFormatPan() {
+        assertEquals("123", formatPan("123"));
+        assertEquals("123322*", formatPan("123322/"));
+        assertEquals("123322", formatPan("123322"));
+        assertEquals("123322*", formatPan("1233222"));
+        assertEquals("123322****", formatPan("1233222321"));
+        assertEquals("233222*************", formatPan("2332222312312312333"));
     }
 
 }

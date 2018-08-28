@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rbkmoney.binbase.util.PanUtil.formatPan;
+
 @Component
 public class BinbaseHandler implements BinbaseSrv.Iface {
 
@@ -28,7 +30,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
 
     @Override
     public ResponseData lookup(String pan, Reference reference) throws BinNotFound, TException {
-        log.info("Lookup bin data, pan='{}', reference='{}'", pan, reference);
+        log.info("Lookup bin data, pan='{}', reference='{}'", formatPan(pan), reference);
         try {
             Map.Entry<Long, BinData> binDataWithVersion;
             if (reference.isSetLast()) {
@@ -37,10 +39,10 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
                 binDataWithVersion = binbaseService.getBinDataByCardPanAndVersion(pan, reference.getVersion());
             }
             ResponseData responseData = toResponseData(binDataWithVersion);
-            log.info("Lookup result: {}, pan='{}', reference='{}'", responseData, pan, reference);
+            log.info("Lookup result: {}, pan='{}', reference='{}'", responseData, formatPan(pan), reference);
             return responseData;
         } catch (BinNotFoundException | IllegalArgumentException ex) {
-            log.info("Cannot lookup bin data, pan='{}', reference='{}'", pan, reference, ex);
+            log.info("Cannot lookup bin data, pan='{}', reference='{}'", formatPan(pan), reference, ex);
             throw new BinNotFound();
         }
     }

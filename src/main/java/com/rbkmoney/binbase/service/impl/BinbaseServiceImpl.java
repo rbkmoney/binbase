@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.rbkmoney.binbase.util.PanUtil.formatPan;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
 @Service
@@ -42,30 +43,30 @@ public class BinbaseServiceImpl implements BinbaseService {
     @Override
     public Map.Entry<Long, BinData> getBinDataByCardPan(String pan) throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
-            log.info("Trying to get bin data by pan, pan='{}'", pan);
+            log.info("Trying to get bin data by pan, pan='{}'", formatPan(pan));
             Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPan(toLongValue(pan));
             if (binDataWithVersion == null) {
-                throw new BinNotFoundException(String.format("Bin data not found, pan='%s'", pan));
+                throw new BinNotFoundException(String.format("Bin data not found, pan='%s'", formatPan(pan)));
             }
-            log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'", pan, binDataWithVersion);
+            log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'", formatPan(pan), binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by card pan, pan='%s'", pan), ex);
+            throw new StorageException(String.format("Failed to get bin data by card pan, pan='%s'", formatPan(pan)), ex);
         }
     }
 
     @Override
     public Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(String pan, long version) throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
-            log.info("Trying to get bin data by pan and version, pan='{}', version='{}'", pan, version);
+            log.info("Trying to get bin data by pan and version, pan='{}', version='{}'", formatPan(pan), version);
             Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
             if (binDataWithVersion == null) {
-                throw new BinNotFoundException(String.format("Bin data not found, pan='%s', version='%d'", pan, version));
+                throw new BinNotFoundException(String.format("Bin data not found, pan='%s', version='%d'", formatPan(pan), version));
             }
-            log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'", pan, version, binDataWithVersion);
+            log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'", formatPan(pan), version, binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by card pan and version, pan='%s', version='%d'", pan, version), ex);
+            throw new StorageException(String.format("Failed to get bin data by card pan and version, pan='%s', version='%d'", formatPan(pan), version), ex);
         }
     }
 
