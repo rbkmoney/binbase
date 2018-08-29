@@ -111,9 +111,9 @@ public class BinbaseServiceImpl implements BinbaseService {
 
             if (!newBinRanges.isEmpty()) {
                 binRangeDao.save(newBinRanges);
-                log.info("Bin range have been saved, binData='{}', binRanges='{}'", binData, newBinRanges);
+                log.info("Bin range have been saved, binData='{}', range='{}', binRanges='{}'", binData, range, newBinRanges);
             } else {
-                log.info("No new ranges were created, nothing to save, binData='{}', binRanges='{}'", binData, newBinRanges);
+                log.info("No new ranges were created, nothing to save, binData='{}', range='{}'", binData, range);
             }
         } catch (DaoException ex) {
             throw new StorageException(String.format("Failed to save range, binData='%s', range='%s'", binData, range), ex);
