@@ -1,0 +1,3 @@
+[submodule "binbase-data"]
+	path = binbase-data
+	url = git@github.com:rbkmoney/binbase-data.git

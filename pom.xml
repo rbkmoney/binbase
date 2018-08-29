@@ -23,6 +23,7 @@
         <server.port>8022</server.port>
         <exposed.ports>${server.port}</exposed.ports>
         <dockerfile.base.service.tag>22c57470c4fc47161894f036b7cf9d70f42b75f5</dockerfile.base.service.tag>
+        <dockerfile.build.tag>9d4d70317dd08abd400798932a231798ee254a87</dockerfile.build.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <db.name>binbase</db.name>
         <db.port>5432</db.port>
@@ -30,6 +31,7 @@
         <db.user>postgres</db.user>
         <db.password>postgres</db.password>
         <db.schema>binbase</db.schema>
+        <postgresql.version>9.6</postgresql.version>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
     </properties>
 
@@ -62,6 +64,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${postgresql.jdbc.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -125,12 +128,28 @@
     <build>
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.directory}</targetPath>
+                <includes>
+                    <include>entrypoint.sh</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
                 <directory>${project.build.directory}/maven-shared-archive-resources</directory>
                 <targetPath>${project.build.directory}</targetPath>
                 <includes>
                     <include>Dockerfile</include>
                 </includes>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/binbase-data/data</directory>
+                <targetPath>${project.build.directory}/data</targetPath>
+                <includes>
+                    <include>*.xml</include>
+                </includes>
+                <filtering>false</filtering>
             </resource>
             <resource>
                 <directory>${project.build.directory}/maven-shared-archive-resources</directory>

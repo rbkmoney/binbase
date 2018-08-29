@@ -11,6 +11,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.batch.item.xml.StaxEventItemReader;
@@ -38,14 +39,15 @@ public class BatchConfig {
     @Autowired
     private BinbaseService binbaseService;
 
-    @Value("${batch.file_path}/*.xml")
-    private Resource[] resources;
-
     @Value("${batch.strict_mode}")
     private boolean strictMode;
 
     @Bean
-    public MultiResourceItemReader multiResourceItemReader(StaxEventItemReader<BinBaseData> itemReader) {
+    @StepScope
+    public MultiResourceItemReader multiResourceItemReader(
+            StaxEventItemReader<BinBaseData> itemReader,
+            @Value("${#{jobParameters['file_path']}:${batch.file_path}}/*.xml") Resource[] resources
+    ) {
         return new MultiResourceItemReaderBuilder<BinBaseData>()
                 .name("multiResourceItemReader")
                 .delegate(itemReader)
