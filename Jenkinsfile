@@ -6,7 +6,9 @@ build('binbase', 'java-maven') {
     def mvnArgs = '-DjvmArgs="-Xmx256m"'
 
     runStage('Init submodules') {
-        sh 'git submodule update --init --recursive'
+        withGithubSshCredentials {
+            sh 'git submodule update --init --recursive'
+        }
     }
 
     // Run mvn and generate docker file
