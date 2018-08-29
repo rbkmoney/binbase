@@ -46,7 +46,7 @@ public class BatchConfig {
     @StepScope
     public MultiResourceItemReader multiResourceItemReader(
             StaxEventItemReader<BinBaseData> itemReader,
-            @Value("${#{jobParameters['file_path']}:${batch.file_path}}/*.xml") Resource[] resources
+            @Value("${batch.file_path}/*.xml") Resource[] resources
     ) {
         return new MultiResourceItemReaderBuilder<BinBaseData>()
                 .name("multiResourceItemReader")

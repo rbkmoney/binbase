@@ -38,12 +38,12 @@ COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@.jar
 RUN pg_ctl -D /var/lib/postgresql/@postgresql.version@/data start -w \
     && psql --command "ALTER USER postgres WITH SUPERUSER PASSWORD '@db.password@';" \
     && createdb -O postgres @db.name@ "@description@" \
-    && java -jar /opt/@artifactId@/@artifactId@.jar com.rbkmoney.binbase.config.BatchConfig binBaseJob file_path=file:/opt/@artifactId@/data \
+    && java -jar /opt/@artifactId@/@artifactId@.jar com.rbkmoney.binbase.config.BatchConfig binBaseJob --batch.file_path=file:/opt/@artifactId@/data --batch.shutdown_after_execute=true \
     && pg_ctl -D /var/lib/postgresql/@postgresql.version@/data stop -w
 
 WORKDIR /opt/@artifactId@
 ENTRYPOINT ["/opt/@artifactId@/entrypoint.sh"]
-CMD ["java", "-Xmx256m", "-jar","/opt/@artifactId@/@artifactId@.jar"]
+CMD ["java", "-Xmx256m", "-jar","/opt/@artifactId@/@artifactId@.jar", "--spring.batch.job.enabled=false"]
 
 EXPOSE @exposed.ports@
 
