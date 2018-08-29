@@ -1,3 +1,6 @@
 [submodule "binbase-data"]
 	path = binbase-data
 	url = git@github.com:rbkmoney/binbase-data.git
+[submodule "build_utils"]
+	path = build_utils
+	url = git@github.com:rbkmoney/build_utils.git
