@@ -5,6 +5,10 @@ build('binbase', 'java-maven') {
     def serviceName = env.REPO_NAME
     def mvnArgs = '-DjvmArgs="-Xmx256m"'
 
+    runStage('Init submodules') {
+        sh 'git submodule update --init --recursive'
+    }
+
     // Run mvn and generate docker file
     runStage('Maven package') {
         withCredentials([[$class: 'FileBinding', credentialsId: 'java-maven-settings.xml', variable: 'SETTINGS_XML']]) {
