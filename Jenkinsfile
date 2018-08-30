@@ -5,6 +5,19 @@ build('binbase', 'java-maven') {
     def serviceName = env.REPO_NAME
     def mvnArgs = '-DjvmArgs="-Xmx256m"'
 
+    runStage('Init submodules') {
+        withGithubPrivkey {
+            def privKey = sh (
+                script: 'echo ${GITHUB_PRIVKEY} | sed -e \'s|%|%%|g\'',
+                returnStdout: true
+            ).trim()
+
+            withEnv(["GIT_SSH_COMMAND=ssh -o \"IdentityFile=${privKey}\" -o StrictHostKeyChecking=no -o User=git"]) {
+                sh 'git submodule update --init --recursive'
+            }
+        }
+    }
+
     // Run mvn and generate docker file
     runStage('Maven package') {
         withCredentials([[$class: 'FileBinding', credentialsId: 'java-maven-settings.xml', variable: 'SETTINGS_XML']]) {
