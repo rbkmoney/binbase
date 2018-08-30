@@ -38,7 +38,7 @@ COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@.jar
 RUN pg_ctl -D /var/lib/postgresql/@postgresql.version@/data start -w \
     && psql --command "ALTER USER postgres WITH SUPERUSER PASSWORD '@db.password@';" \
     && createdb -O postgres @db.name@ "@description@" \
-    && java -jar /opt/@artifactId@/@artifactId@.jar com.rbkmoney.binbase.config.BatchConfig binBaseJob --batch.file_path=file:/opt/@artifactId@/data --batch.shutdown_after_execute=true \
+    && java -jar /opt/@artifactId@/@artifactId@.jar com.rbkmoney.binbase.config.BatchConfig binBaseJob --logging.level.com.rbkmoney.binbase=ERROR --logging.level.com.rbkmoney.binbase.batch.listener.DefaultChunkListener=INFO --batch.file_path=file:/opt/@artifactId@/data --batch.shutdown_after_execute=true \
     && pg_ctl -D /var/lib/postgresql/@postgresql.version@/data stop -w \
     && rm -rf /opt/@artifactId@/data/*
 

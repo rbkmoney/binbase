@@ -2,16 +2,21 @@ package com.rbkmoney.binbase.config;
 
 import com.google.common.collect.Range;
 import com.rbkmoney.binbase.batch.BinBaseData;
+import com.rbkmoney.binbase.batch.listener.DefaultChunkListener;
 import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
 import com.rbkmoney.binbase.batch.writer.BinRangeWriter;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.service.BinbaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.batch.item.xml.StaxEventItemReader;
@@ -87,6 +92,7 @@ public class BatchConfig {
                 .reader(multiResourceItemReader)
                 .processor(new BinBaseXmlProcessor())
                 .writer(new BinRangeWriter(binbaseService))
+                .listener(new DefaultChunkListener())
                 .build();
     }
 
