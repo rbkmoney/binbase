@@ -6,8 +6,15 @@ build('binbase', 'java-maven') {
     def mvnArgs = '-DjvmArgs="-Xmx256m"'
 
     runStage('Init submodules') {
-        withGithubSshCredentials {
-            sh 'git submodule update --init --recursive'
+        withGithubPrivkey {
+            def privKey = sh (
+                script: 'echo ${GITHUB_PRIVKEY} | sed -e \'s|%|%%|g\'',
+                returnStdout: true
+            ).trim()
+
+            withEnv(["GIT_SSH_COMMAND=ssh -o \"IdentityFile=${privKey}\" -o StrictHostKeyChecking=no -o User=git"]) {
+                sh 'git submodule update --init --recursive'
+            }
         }
     }
 

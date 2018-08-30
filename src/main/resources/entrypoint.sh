@@ -5,5 +5,5 @@ function onExit {
 trap onExit EXIT
 
 pg_ctl -D /var/lib/postgresql/@postgresql.version@/data start -w
-exec $@
+$@
 exit $?
