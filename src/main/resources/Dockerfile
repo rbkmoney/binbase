@@ -21,17 +21,18 @@ COPY --from=build /etc/postgresql-@postgresql.version@ /etc/postgresql-@postgres
 COPY entrypoint.sh /opt/@artifactId@/entrypoint.sh
 COPY data /opt/@artifactId@/data
 
-RUN echo postgres:x:70: > /etc/group \
-    && echo postgres:x:70:70:added by portage for postgresql:/var/lib/postgresql:/bin/sh > /etc/passwd \
-    && echo postgres:!:17725:::::: > /etc/shadow \
-    && chmod 0700 -R /var/lib/postgresql/@postgresql.version@/data \
-    && chown postgres -R /var/lib/postgresql/@postgresql.version@/data \
-    && chown postgres -R /etc/postgresql-@postgresql.version@ \
-    && mkdir -p /run/postgresql \
-    && chown -R postgres /run/postgresql \
-    && chown -R postgres /opt/@artifactId@/entrypoint.sh \
-    && chmod +x /opt/@artifactId@/entrypoint.sh \
-    && chown -R postgres /opt/@artifactId@/data
+RUN echo postgres:x:70: >> /etc/group \
+    && echo postgres:x:70:70::/var/lib/postgresql:/bin/sh >> /etc/passwd \
+    && echo postgres:!:17725:::::: >> /etc/shadow \
+    && mkdir /run /run/postgresql
+
+RUN chmod 0700 -R /var/lib/postgresql/@postgresql.version@/data \
+    && chown postgres:postgres -R \
+        /var/lib/postgresql/@postgresql.version@/data \
+        /etc/postgresql-@postgresql.version@ \
+        /run/postgresql \
+        /opt/@artifactId@ \
+    && chmod +x /opt/@artifactId@/entrypoint.sh
 
 USER postgres
 COPY @artifactId@-@version@.jar /opt/@artifactId@/@artifactId@.jar
