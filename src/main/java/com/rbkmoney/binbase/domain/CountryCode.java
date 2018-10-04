@@ -278,7 +278,7 @@ public enum CountryCode {
         this.numeric = numeric;
     }
 
-    private static CountryCode getByAlpha2Code(String code) {
+    public static CountryCode getByAlpha2Code(String code) {
         try {
             return Enum.valueOf(CountryCode.class, code);
         } catch (IllegalArgumentException e) {
@@ -286,7 +286,7 @@ public enum CountryCode {
         }
     }
 
-    private static CountryCode getByAlpha3Code(String code) {
+    public static CountryCode getByAlpha3Code(String code) {
         return alpha3Map.get(code);
     }
 

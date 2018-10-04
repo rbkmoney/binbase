@@ -32,15 +32,15 @@ public class BatchUploadTest extends AbstractIntegrationTest {
     public void testLookupData() throws TException {
         ResponseData responseData = binbaseClient.lookup("100001", Reference.last(new Last()));
         assertEquals(3L, responseData.getVersion());
-        assertEquals(CountryCode.US, CountryCode.getByNumericCode(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.US, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertEquals(CardType.credit, responseData.getBinData().getCardType());
         responseData = binbaseClient.lookup("100001", Reference.version(2L));
         assertEquals(2L, responseData.getVersion());
-        assertEquals(CountryCode.US, CountryCode.getByNumericCode(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.US, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertEquals(CardType.credit_or_debit, responseData.getBinData().getCardType());
         responseData = binbaseClient.lookup("100001", Reference.version(1L));
         assertEquals(1L, responseData.getVersion());
-        assertEquals(CountryCode.CA, CountryCode.getByNumericCode(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.CA, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertNull(responseData.getBinData().getCardType());
 
         responseData = binbaseClient.lookup("100115", Reference.last(new Last()));

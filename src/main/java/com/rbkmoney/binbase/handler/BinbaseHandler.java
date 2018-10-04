@@ -64,7 +64,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
         );
         damselBinData.setIsoCountryCode(
                 Optional.ofNullable(binData.getIsoCountryCode())
-                        .map(countryCode -> countryCode.getNumeric())
+                        .map(countryCode -> countryCode.getAlpha3())
                         .orElse(null)
         );
         return new ResponseData(damselBinData, versionId);
