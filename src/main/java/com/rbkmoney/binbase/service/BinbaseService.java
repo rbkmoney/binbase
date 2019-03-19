@@ -11,10 +11,6 @@ import java.util.Map;
 
 public interface BinbaseService {
 
-    long MIN_LOWER_ENDPOINT = (long) Math.pow(10, 17);
-
-    long MAX_UPPER_ENDPOINT = (long) Math.pow(10, 18);
-
     Map.Entry<Long, BinData> getBinDataByCardPan(String pan) throws BinNotFoundException, StorageException, IllegalArgumentException;
 
     Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(String pan, long version) throws BinNotFoundException, StorageException, IllegalArgumentException;

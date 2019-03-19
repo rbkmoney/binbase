@@ -10,8 +10,7 @@ import org.springframework.batch.item.ItemProcessor;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.rbkmoney.binbase.service.BinbaseService.MAX_UPPER_ENDPOINT;
-import static com.rbkmoney.binbase.service.BinbaseService.MIN_LOWER_ENDPOINT;
+import static com.rbkmoney.binbase.util.BinBaseConstant.*;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
 public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry<BinData, Range<Long>>> {
@@ -30,8 +29,9 @@ public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry
 
     private Range<Long> buildRange(String bin) {
         long lowerEndpoint = toLongValue(bin);
-        long nextBin = toLongValue(String.valueOf(Long.valueOf(bin) + 1L));
-        long upperEndpoint = nextBin == MIN_LOWER_ENDPOINT ? MAX_UPPER_ENDPOINT : nextBin;
+        int capacity = extractCapacity(lowerEndpoint);
+        long nextBin = toLongValue(String.format("%06d", Long.valueOf(bin) + 1L), capacity);
+        long upperEndpoint = (nextBin == MIN_DEFAULT_LOWER_ENDPOINT) ? MAX_UPPER_ENDPOINT : nextBin;
 
         return Range.openClosed(
                 lowerEndpoint,

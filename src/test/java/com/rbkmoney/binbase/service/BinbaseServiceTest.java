@@ -56,6 +56,25 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void testSaveRangesWithSameDataWithZero() {
+        BinData binData = random(BinData.class);
+        binbaseService.saveRange(binData, Range.openClosed(toLongValue("030000"), toLongValue("040000")));
+        binbaseService.saveRange(binData, Range.openClosed(toLongValue("003000"), toLongValue("004000")));
+
+        Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan("003292003292003292");
+        assertEquals(1L, (long) binDataWithVersion.getKey());
+        assertEquals(binData, binDataWithVersion.getValue());
+
+        binDataWithVersion = binbaseService.getBinDataByCardPan("003292");
+        assertEquals(1L, (long) binDataWithVersion.getKey());
+        assertEquals(binData, binDataWithVersion.getValue());
+
+        binDataWithVersion = binbaseService.getBinDataByCardPan("032923");
+        assertEquals(1L, (long) binDataWithVersion.getKey());
+        assertEquals(binData, binDataWithVersion.getValue());
+    }
+
+    @Test
     public void testSaveRangesWithDifferentData() {
         BinData firstBinData = random(BinData.class);
         binbaseService.saveRange(firstBinData, Range.openClosed(toLongValue("100000"), toLongValue("800000")));
