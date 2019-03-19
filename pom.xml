@@ -22,6 +22,7 @@
         <server.port>8022</server.port>
         <exposed.ports>${server.port}</exposed.ports>
         <dockerfile.base.service.tag>4f3b89c6381373923f5fdea18b08741b9bada1e6</dockerfile.base.service.tag>
+        <dockerfile.build.tag>f3732d29a5e622aabf80542b5138b3631a726adb</dockerfile.build.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <db.name>binbase</db.name>
         <db.port>5432</db.port>
