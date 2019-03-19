@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.rbkmoney.binbase.util.BinBaseConstant.*;
+import static com.rbkmoney.binbase.util.BinbaseExtract.extractCapacity;
 import static com.rbkmoney.binbase.util.PanUtil.formatPan;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 

@@ -8,8 +8,4 @@ public class BinBaseConstant {
 
     public static final int DEFAULT_CAPACITY = 18;
 
-    public static int extractCapacity(long pan) {
-        return String.valueOf(pan).length();
-    }
-
 }
