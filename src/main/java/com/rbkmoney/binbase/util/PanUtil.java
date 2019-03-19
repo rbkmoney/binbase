@@ -9,7 +9,7 @@ public class PanUtil {
 
     public static void validatePan(String pan) throws IllegalArgumentException {
         if (!pan.matches("^\\d{6,19}$")) {
-            throw new IllegalArgumentException("Invalid pan format " + pan);
+            throw new IllegalArgumentException("Invalid pan format");
         }
     }
 
