@@ -3,7 +3,8 @@ package com.rbkmoney.binbase.util;
 
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_CAPACITY;
+import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_SIZE;
+import static com.rbkmoney.binbase.util.BinBaseConstant.RIGHT_PAD_SIZE;
 
 public class PanUtil {
 
@@ -14,12 +15,8 @@ public class PanUtil {
     }
 
     public static long toLongValue(String pan) throws IllegalArgumentException {
-        return toLongValue(pan, DEFAULT_CAPACITY);
-    }
-
-    public static long toLongValue(String pan, int capacity) throws IllegalArgumentException {
         validatePan(pan);
-        return Long.valueOf(StringUtils.rightPad(pan.substring(0, Math.min(pan.length(), capacity)), 18, "0"));
+        return Long.valueOf(StringUtils.rightPad(pan.substring(0, Math.min(pan.length(), RIGHT_PAD_SIZE)), DEFAULT_SIZE, "0"));
     }
 
     public static String formatPan(String pan) {

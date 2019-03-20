@@ -4,8 +4,9 @@ public class BinBaseConstant {
 
     public static final long MIN_LOWER_ENDPOINT = 0L;
     public static final long MAX_UPPER_ENDPOINT = (long) Math.pow(10, 18);
-    public static final long MIN_DEFAULT_LOWER_ENDPOINT = (long) Math.pow(10, 17);
+    public static final long DEFAULT_MIN_LOWER_ENDPOINT = (long) Math.pow(10, 17);
 
-    public static final int DEFAULT_CAPACITY = 18;
+    public static final int DEFAULT_SIZE = 18;
+    public static final int RIGHT_PAD_SIZE = 18;
 
 }

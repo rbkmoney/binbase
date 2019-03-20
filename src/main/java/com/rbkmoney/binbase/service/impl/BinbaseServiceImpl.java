@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.*;
-import static com.rbkmoney.binbase.util.BinbaseExtract.extractCapacity;
+import static com.rbkmoney.binbase.util.BinBaseConstant.MAX_UPPER_ENDPOINT;
+import static com.rbkmoney.binbase.util.BinBaseConstant.MIN_LOWER_ENDPOINT;
 import static com.rbkmoney.binbase.util.PanUtil.formatPan;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
@@ -46,8 +46,7 @@ public class BinbaseServiceImpl implements BinbaseService {
     public Map.Entry<Long, BinData> getBinDataByCardPan(String pan) throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
             log.info("Trying to get bin data by pan, pan='{}'", formatPan(pan));
-            int capacity = extractCapacity(toLongValue(pan));
-            Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPan(toLongValue(pan, capacity));
+            Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPan(toLongValue(pan));
             if (binDataWithVersion == null) {
                 throw new BinNotFoundException(String.format("Bin data not found, pan='%s'", formatPan(pan)));
             }
