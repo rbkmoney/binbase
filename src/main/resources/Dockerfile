@@ -1,5 +1,5 @@
-FROM dr.rbkmoney.com/rbkmoney/service-java:@dockerfile.base.service.tag@ as service-java
-FROM dr.rbkmoney.com/rbkmoney/build:@dockerfile.build.tag@ as build
+FROM @dockerfile.registry@/rbkmoney/service-java:@dockerfile.base.service.tag@ as service-java
+FROM @dockerfile.registry@/rbkmoney/build:@dockerfile.build.tag@ as build
 
 COPY --from=service-java / /tmp/portage-root/
 
@@ -8,12 +8,12 @@ ENV DATA_DIR "/var/lib/postgresql/@postgresql.version@/data"
 ENV PG_INITDB_OPTS "--username=postgres --auth-host=trust --auth-local=trust --locale=en_US.UTF-8"
 
 ENV ROOT=/tmp/portage-root
-RUN echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
+RUN mkdir /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
     && git clone git://git.bakka.su/gentoo-mirror --depth 1 /usr/portage \
     && emerge dev-db/postgresql:@postgresql.version@ sys-libs/readline \
     && emerge --config dev-db/postgresql:@postgresql.version@
 
-FROM dr.rbkmoney.com/rbkmoney/service-java:@dockerfile.base.service.tag@
+FROM @dockerfile.registry@/rbkmoney/service-java:@dockerfile.base.service.tag@
 ENV LOG_PATH /tmp/
 COPY --from=build /tmp/portage-root/ /
 COPY --from=build /var/lib/postgresql/@postgresql.version@/data /var/lib/postgresql/@postgresql.version@/data

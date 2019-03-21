@@ -1,9 +1,7 @@
 #!groovy
 build('binbase', 'java-maven') {
     checkoutRepo()
-
-    def serviceName = env.REPO_NAME
-    def mvnArgs = '-DjvmArgs="-Xmx256m"'
+    loadBuildUtils()
 
     runStage('Init submodules') {
         withGithubPrivkey {
@@ -18,44 +16,16 @@ build('binbase', 'java-maven') {
         }
     }
 
-    // Run mvn and generate docker file
-    runStage('Maven package') {
-        withCredentials([[$class: 'FileBinding', credentialsId: 'java-maven-settings.xml', variable: 'SETTINGS_XML']]) {
-            def mvn_command_arguments = ' --batch-mode --settings  $SETTINGS_XML -P ci ' +
-                    " -Dgit.branch=${env.BRANCH_NAME} " +
-                    " ${mvnArgs}"
-            if (env.BRANCH_NAME == 'master') {
-                sh 'mvn deploy' + mvn_command_arguments
-            } else {
-                sh 'mvn package' + mvn_command_arguments
-            }
-        }
+    def javaServicePipeline
+    runStage('load JavaService pipeline') {
+        javaServicePipeline = load("build_utils/jenkins_lib/pipeJavaService.groovy")
     }
 
-    def serviceImage;
-    def imgShortName = 'rbkmoney/' + "${serviceName}" + ':' + '$COMMIT_ID';
-    getCommitId()
-    runStage('Build Service image') {
-        serviceImage = docker.build(imgShortName, '-f ./target/Dockerfile ./target')
-    }
+    def serviceName = env.REPO_NAME
+    def mvnArgs = '-DjvmArgs="-Xmx256m"'
+    def useJava11 = true
+    def registry = 'dr2.rbkmoney.com'
+    def registryCredsId = 'jenkins_harbor'
 
-    try {
-        if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('epic')) {
-            runStage('Push Service image') {
-                docker.withRegistry('https://dr.rbkmoney.com/v2/', 'dockerhub-rbkmoneycibot') {
-                    serviceImage.push();
-                }
-                // Push under 'withRegistry' generates 2d record with 'long filename' in local docker registry.
-                // Untag the long-filename
-                sh "docker rmi dr.rbkmoney.com/${imgShortName}"
-            }
-        }
-    }
-    finally {
-        runStage('Remove local image') {
-            // Remove the image to keep Jenkins runner clean.
-            sh "docker rmi ${imgShortName}"
-        }
-    }
+    javaServicePipeline(serviceName, useJava11, mvnArgs, registry, registryCredsId)
 }
-

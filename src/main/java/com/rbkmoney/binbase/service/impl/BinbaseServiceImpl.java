@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.rbkmoney.binbase.util.BinBaseConstant.MAX_UPPER_ENDPOINT;
+import static com.rbkmoney.binbase.util.BinBaseConstant.MIN_LOWER_ENDPOINT;
 import static com.rbkmoney.binbase.util.PanUtil.formatPan;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
