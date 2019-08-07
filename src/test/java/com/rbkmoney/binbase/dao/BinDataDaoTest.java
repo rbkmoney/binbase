@@ -23,11 +23,22 @@ public class BinDataDaoTest extends AbstractIntegrationTest {
     @Test
     public void testGetBinDataByPan() throws DaoException {
         BinData binData = random(BinData.class);
-        long binDataId = binDataDao.save(binData);
 
+        long binDataId = binDataDao.save(binData);
         binRangeDao.save(new BinRange(1000000000000000000L, 2000000000000000000L, 1L, binDataId));
+
         assertEquals(binData, binDataDao.getBinDataByCardPan(1230679997775486545L).getValue());
         assertEquals(binData, binDataDao.getBinDataByCardPanAndVersion(1230679997775486545L, 1).getValue());
+    }
+
+    @Test
+    public void testGetBinDataById() throws DaoException {
+        BinData binData = random(BinData.class);
+
+        long binDataId = binDataDao.save(binData);
+        binRangeDao.save(new BinRange(1L, 2L, 1L, binDataId));
+
+        assertEquals(binData, binDataDao.getBinDataByBinDataId(binDataId).getValue());
     }
 
     @Test
@@ -35,8 +46,10 @@ public class BinDataDaoTest extends AbstractIntegrationTest {
         BinData binData = random(BinData.class);
 
         long binDataId = binDataDao.save(binData);
+        binRangeDao.save(new BinRange(1L, 2L, 1L, binDataId));
+
         assertEquals(binDataId, binDataDao.save(binData));
-        assertEquals(binData, binDataDao.get(binDataId));
+        assertEquals(binData, binDataDao.getBinDataByBinDataId(binDataId).getValue());
     }
 
     @Test
@@ -45,8 +58,10 @@ public class BinDataDaoTest extends AbstractIntegrationTest {
         binData.setPaymentSystem("visa");
 
         long binDataId = binDataDao.save(binData);
+        binRangeDao.save(new BinRange(1L, 2L, 1L, binDataId));
+
         assertEquals(binDataId, binDataDao.save(binData));
-        assertEquals(binData, binDataDao.get(binDataId));
+        assertEquals(binData, binDataDao.getBinDataByBinDataId(binDataId).getValue());
     }
 
 }

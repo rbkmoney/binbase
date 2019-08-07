@@ -1,8 +1,13 @@
 package com.rbkmoney.binbase.domain;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
+@Getter
 public enum CountryCode {
 
     AF("Afghanistan", "AFG", "4"),
@@ -262,8 +267,8 @@ public enum CountryCode {
 
     static {
         for (CountryCode cc : values()) {
-            alpha3Map.put(cc.getAlpha3(), cc);
-            numericMap.put(cc.getNumeric(), cc);
+            alpha3Map.put(cc.alpha3, cc);
+            numericMap.put(cc.numeric, cc);
         }
     }
 
@@ -271,43 +276,12 @@ public enum CountryCode {
     private final String alpha3;
     private final String numeric;
 
-
-    CountryCode(String name, String alpha3, String numeric) {
-        this.name = name;
-        this.alpha3 = alpha3;
-        this.numeric = numeric;
-    }
-
-    public static CountryCode getByAlpha2Code(String code) {
-        try {
-            return Enum.valueOf(CountryCode.class, code);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
     public static CountryCode getByAlpha3Code(String code) {
         return alpha3Map.get(code);
     }
 
     public static CountryCode getByNumericCode(String code) {
         return numericMap.get(code);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAlpha2() {
-        return name();
-    }
-
-    public String getAlpha3() {
-        return alpha3;
-    }
-
-    public String getNumeric() {
-        return numeric;
     }
 }
 

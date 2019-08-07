@@ -11,14 +11,25 @@ import java.util.Map;
 
 public interface BinbaseService {
 
-    Map.Entry<Long, BinData> getBinDataByCardPan(String pan) throws BinNotFoundException, StorageException, IllegalArgumentException;
+    Map.Entry<Long, BinData> getBinDataByCardPan(String pan)
+            throws BinNotFoundException, StorageException, IllegalArgumentException;
 
-    Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(String pan, long version) throws BinNotFoundException, StorageException, IllegalArgumentException;
+    Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(String pan, long version)
+            throws BinNotFoundException, StorageException, IllegalArgumentException;
 
-    void saveRange(BinData binData, Range<Long> range) throws StorageException, IllegalArgumentException;
+    Map.Entry<Long, BinData> getBinDataByBinDataId(Long binDataId)
+            throws BinNotFoundException, StorageException, IllegalArgumentException;
 
-    long saveBinData(BinData binData) throws StorageException;
+    Map.Entry<Long, BinData> getBinDataByCardToken(String cardToken)
+            throws BinNotFoundException, StorageException, IllegalArgumentException;
 
-    List<BinRange> getLastIntersectionBinRanges(Range<Long> range) throws StorageException;
+    void saveRange(BinData binData, Range<Long> range)
+            throws StorageException, IllegalArgumentException;
+
+    long saveBinData(BinData binData)
+            throws StorageException;
+
+    List<BinRange> getLastIntersectionBinRanges(Range<Long> range)
+            throws StorageException;
 
 }
