@@ -1,0 +1,32 @@
+server:
+  port: @server.port@
+
+spring:
+  application:
+    name: '@name@'
+    description: '@description@'
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: @db.url@
+    username: @db.user@
+    password: @db.password@
+  batch:
+    initialize-schema: always
+
+batch:
+  file_path: "file:"
+  strict_mode: true
+  shutdown_after_execute: false
+
+management:
+  metrics:
+    export:
+      statsd:
+        enabled: false
+        flavor: etsy
+
+client:
+  cds:
+    url: http://127.0.0.1:8023/v1/storage
+    timeout: 5000

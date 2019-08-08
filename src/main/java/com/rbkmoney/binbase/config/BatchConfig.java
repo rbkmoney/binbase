@@ -7,20 +7,16 @@ import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
 import com.rbkmoney.binbase.batch.writer.BinRangeWriter;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.service.BinbaseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.ChunkListener;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
 import org.springframework.batch.item.xml.StaxEventItemReader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -33,16 +29,12 @@ import java.util.Map;
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
+@RequiredArgsConstructor
 public class BatchConfig {
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
-    @Autowired
-    private BinbaseService binbaseService;
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final BinbaseService binbaseService;
 
     @Value("${batch.strict_mode}")
     private boolean strictMode;
@@ -51,8 +43,7 @@ public class BatchConfig {
     @StepScope
     public MultiResourceItemReader multiResourceItemReader(
             StaxEventItemReader<BinBaseData> itemReader,
-            @Value("${batch.file_path}/*.xml") Resource[] resources
-    ) {
+            @Value("${batch.file_path}/*.xml") Resource[] resources) {
         return new MultiResourceItemReaderBuilder<BinBaseData>()
                 .name("multiResourceItemReader")
                 .delegate(itemReader)

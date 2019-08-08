@@ -33,8 +33,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(1L, (long) binDataWithVersion.getKey());
                             assertEquals(binData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("200000"), toLongValue("300000"))
                 .forEach(
@@ -42,8 +41,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(1L, (long) binDataWithVersion.getKey());
                             assertEquals(binData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("300000"), toLongValue("400000"))
                 .forEach(
@@ -51,8 +49,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(1L, (long) binDataWithVersion.getKey());
                             assertEquals(binData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
     }
 
     @Test
@@ -89,8 +86,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(1L, (long) binDataWithVersion.getKey());
                             assertEquals(firstBinData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("200000"), toLongValue("300000"))
                 .forEach(
@@ -98,8 +94,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(2L, (long) binDataWithVersion.getKey());
                             assertEquals(secondBinData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("300000"), toLongValue("600000"))
                 .forEach(
@@ -107,8 +102,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(3L, (long) binDataWithVersion.getKey());
                             assertEquals(thirdBinData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("600000"), toLongValue("800000"))
                 .forEach(
@@ -116,8 +110,7 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(2L, (long) binDataWithVersion.getKey());
                             assertEquals(thirdBinData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
         new Random().longs(100L, toLongValue("800000"), toLongValue("900000"))
                 .forEach(
@@ -125,10 +118,9 @@ public class BinbaseServiceTest extends AbstractIntegrationTest {
                             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPan(String.valueOf(panValue));
                             assertEquals(1L, (long) binDataWithVersion.getKey());
                             assertEquals(thirdBinData, binDataWithVersion.getValue());
-                        }
-                );
+                        });
 
-        Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPanAndVersion(String.valueOf("52304000"), 2L);
+        Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardPanAndVersion("52304000", 2L);
         assertEquals(2L, (long) binDataWithVersion.getKey());
         assertEquals(secondBinData, binDataWithVersion.getValue());
     }

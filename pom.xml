@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>binbase</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>binbase</name>
@@ -33,6 +33,8 @@
         <db.schema>binbase</db.schema>
         <postgresql.version>9.6</postgresql.version>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
+        <damsel.version>1.305-0b8b408</damsel.version>
+        <lombok-version>1.18.4</lombok-version>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
@@ -73,11 +75,16 @@
             <artifactId>guava</artifactId>
             <version>26.0-jre</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>one.util</groupId>-->
-        <!--<artifactId>streamex</artifactId>-->
-        <!--<version>0.6.7</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>17.0.0</version>
+        </dependency>
 
         <!--RBK libs-->
         <dependency>
@@ -88,7 +95,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>binbase-proto</artifactId>
-            <version>1.2-a26e028</version>
+            <version>1.12-d0e136d</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney.geck</groupId>
@@ -121,6 +128,17 @@
             <artifactId>javax.activation-api</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>damsel</artifactId>
+            <version>${damsel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>cds-proto</artifactId>
+            <version>1.45-1f1eb62</version>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -162,6 +180,7 @@
                 </includes>
                 <filtering>true</filtering>
             </resource>
+
             <resource>
                 <directory>${project.build.directory}/maven-shared-archive-resources</directory>
                 <targetPath>${project.build.directory}</targetPath>
@@ -170,6 +189,7 @@
                 </includes>
                 <filtering>true</filtering>
             </resource>
+
             <resource>
                 <directory>${project.basedir}/binbase-data/data</directory>
                 <targetPath>${project.build.directory}/data</targetPath>
@@ -178,6 +198,7 @@
                 </includes>
                 <filtering>false</filtering>
             </resource>
+
             <resource>
                 <directory>${project.build.directory}/maven-shared-archive-resources</directory>
                 <filtering>true</filtering>
@@ -185,6 +206,7 @@
                     <exclude>Dockerfile</exclude>
                 </excludes>
             </resource>
+
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -196,6 +218,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
@@ -211,6 +234,7 @@
                     </locations>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
@@ -237,6 +261,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

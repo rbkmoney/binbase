@@ -7,12 +7,16 @@ import java.util.Map;
 
 public interface BinDataDao {
 
-    Map.Entry<Long, BinData> getBinDataByCardPan(long pan) throws DaoException;
+    Map.Entry<Long, BinData> getBinDataByCardPan(long pan)
+            throws DaoException;
 
-    Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(long pan, long versionId) throws DaoException;
+    Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(long pan, long versionId)
+            throws DaoException;
 
-    BinData get(long id) throws DaoException;
+    Map.Entry<Long, BinData> getBinDataByBinDataId(long id)
+            throws DaoException;
 
-    long save(BinData binData) throws DaoException;
+    long save(BinData binData)
+            throws DaoException;
 
 }

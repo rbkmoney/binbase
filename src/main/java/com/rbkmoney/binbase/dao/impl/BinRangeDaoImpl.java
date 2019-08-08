@@ -4,6 +4,7 @@ import com.google.common.collect.Range;
 import com.rbkmoney.binbase.dao.BinRangeDao;
 import com.rbkmoney.binbase.domain.BinRange;
 import com.rbkmoney.binbase.exception.DaoException;
+import org.intellij.lang.annotations.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.jdbc.JdbcUpdateAffectedIncorrectNumberOfRowsException;
@@ -27,8 +28,7 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
             rs.getLong("lower"),
             rs.getLong("upper"),
             rs.getLong("version_id"),
-            rs.getLong("bin_data_id")
-    );
+            rs.getLong("bin_data_id"));
 
     @Autowired
     public BinRangeDaoImpl(DataSource dataSource) {
@@ -38,15 +38,16 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
     @Override
     public List<BinRange> getIntersectionRanges(Range<Long> range) throws DaoException {
         try {
-            String namedSql = "SELECT lower(range) as lower, upper(range) as upper, version_id, bin_data_id FROM binbase.bin_range WHERE range && int8range(:lower, :upper, '[)')";
+            @Language("PostgreSQL")
+            String namedSql = "SELECT lower(range) as lower, upper(range) as upper, version_id, bin_data_id " +
+                    "FROM binbase.bin_range WHERE range && int8range(:lower, :upper, '[)')";
             return getNamedParameterJdbcTemplate()
                     .query(
                             namedSql,
                             new MapSqlParameterSource()
                                     .addValue("lower", range.lowerEndpoint())
                                     .addValue("upper", range.upperEndpoint()),
-                            binRangeRowMapper
-                    );
+                            binRangeRowMapper);
         } catch (NestedRuntimeException ex) {
             throw new DaoException(ex);
         }
@@ -55,7 +56,9 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
     @Override
     public long save(BinRange binRange) throws DaoException {
         try {
-            String namedSql = "INSERT INTO binbase.bin_range (range, version_id, bin_data_id) VALUES (int8range(:lower, :upper, '[)'), :version_id, :bin_data_id) RETURNING id";
+            @Language("PostgreSQL")
+            String namedSql = "INSERT INTO binbase.bin_range (range, version_id, bin_data_id) " +
+                    "VALUES (int8range(:lower, :upper, '[)'), :version_id, :bin_data_id) RETURNING id";
             KeyHolder keyHolder = new GeneratedKeyHolder();
             int rowsAffected = getNamedParameterJdbcTemplate()
                     .update(
@@ -65,11 +68,12 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
                                     .addValue("upper", binRange.getRange().upperEndpoint())
                                     .addValue("version_id", binRange.getVersionId())
                                     .addValue("bin_data_id", binRange.getBinDataId()),
-                            keyHolder
-                    );
+                            keyHolder);
+
             if (rowsAffected != 1) {
                 throw new JdbcUpdateAffectedIncorrectNumberOfRowsException(namedSql, 1, rowsAffected);
             }
+
             return keyHolder.getKey().longValue();
         } catch (NestedRuntimeException ex) {
             throw new DaoException(ex);
@@ -79,7 +83,9 @@ public class BinRangeDaoImpl extends NamedParameterJdbcDaoSupport implements Bin
     @Override
     public void save(List<BinRange> binRanges) throws DaoException {
         try {
-            String namedSql = "INSERT INTO binbase.bin_range (range, version_id, bin_data_id) VALUES (int8range(?, ?, '[)'), ?, ?)";
+            @Language("PostgreSQL")
+            String namedSql = "INSERT INTO binbase.bin_range (range, version_id, bin_data_id) " +
+                    "VALUES (int8range(?, ?, '[)'), ?, ?)";
             int[] updateCounts = getJdbcTemplate().batchUpdate(
                     namedSql,
                     new BatchPreparedStatementSetter() {
