@@ -47,7 +47,7 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPan(long pan) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_data.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND bin_range.bin_data_id = bin_data.id) " +
                     "ORDER BY version_id DESC LIMIT 1";
@@ -68,7 +68,7 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(long pan, long versionId) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_data.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND version_id = :version_id AND bin_range.bin_data_id = bin_data.id)";
             return getNamedParameterJdbcTemplate().queryForObject(
@@ -90,10 +90,10 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByBinDataId(long id) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_data.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
                     "FROM binbase.bin_data JOIN binbase.bin_range " +
                     "ON bin_data.id = bin_range.bin_data_id " +
-                    "WHERE bin_data.id = :id";
+                    "WHERE bin_range.id = :id";
             return getNamedParameterJdbcTemplate().queryForObject(
                     namedSql,
                     new MapSqlParameterSource()
