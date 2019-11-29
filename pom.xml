@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>binbase</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>binbase</name>
@@ -22,7 +22,7 @@
         <exposed.ports>${server.port}</exposed.ports>
         <dockerfile.base.service.tag>bc95d0d6dc13c693acd2b274531a7d604b877bf3</dockerfile.base.service.tag>
         <dockerfile.build.tag>f3732d29a5e622aabf80542b5138b3631a726adb</dockerfile.build.tag>
-        <dockerfile.registry>dr2.rbkmoney.com</dockerfile.registry>
+        <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <shared.resources.version>0.3.6</shared.resources.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <db.name>binbase</db.name>
