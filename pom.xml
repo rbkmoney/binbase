@@ -35,7 +35,7 @@
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
         <damsel.version>1.305-0b8b408</damsel.version>
         <lombok-version>1.18.4</lombok-version>
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
     <dependencies>
