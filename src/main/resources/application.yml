@@ -25,6 +25,7 @@ management:
       statsd:
         enabled: false
         flavor: etsy
+  endpoint.health.show-details: always
 
 client:
   cds:
