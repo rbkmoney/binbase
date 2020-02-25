@@ -34,7 +34,7 @@
         <db.schema>binbase</db.schema>
         <postgresql.version>9.6</postgresql.version>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
-        <damsel.version>1.305-0b8b408</damsel.version>
+        <damsel.version>1.384-7dd9035</damsel.version>
         <lombok-version>1.18.4</lombok-version>
         <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
     </properties>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>cds-proto</artifactId>
-            <version>1.45-1f1eb62</version>
+            <version>1.54-708b363</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
