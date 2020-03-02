@@ -9,7 +9,7 @@ ENV PG_INITDB_OPTS "--username=postgres --auth-host=trust --auth-local=trust --l
 
 ENV ROOT=/tmp/portage-root
 
-RUN mkdir /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
+RUN mkdir -p /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
     && git clone git://git.bakka.su/gentoo-mirror --depth 1 /usr/portage \
     && emerge --usepkgonly sys-libs/ncurses && emerge --usepkgonly dev-db/postgresql:@postgresql.version@ sys-libs/readline \
     && emerge --config dev-db/postgresql:@postgresql.version@
