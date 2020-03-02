@@ -14,8 +14,6 @@ ENV LD_LIBRARY_PATH=$ROOT/usr/lib64/
 RUN mkdir -p /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
     && git clone git://git.bakka.su/gentoo-mirror --depth 1 /usr/portage \
     && /sbin/ldconfig /$ROOT/usr/lib64/ \
-    && emerge --binpkg-respect-use sys-libs/ncurses \
-    && emerge --binpkg-respect-use sys-libs/readline \
     && emerge --usepkgonly --binpkg-respect-use dev-db/postgresql:@postgresql.version@ \
     && emerge --config dev-db/postgresql:@postgresql.version@
 
