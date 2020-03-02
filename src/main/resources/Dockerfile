@@ -11,7 +11,7 @@ ENV ROOT=/tmp/portage-root
 
 RUN mkdir -p /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
     && git clone git://git.bakka.su/gentoo-mirror --depth 1 /usr/portage \
-    && emerge --usepkgonly sys-libs/ncurses && emerge --usepkgonly dev-db/postgresql:@postgresql.version@ sys-libs/readline \
+    && emerge --usepkgonly --binpkg-respect-use sys-libs/ncurses && emerge --usepkgonly --binpkg-respect-use dev-db/postgresql:@postgresql.version@ sys-libs/readline \
     && emerge --config dev-db/postgresql:@postgresql.version@
 
 FROM @dockerfile.registry@/rbkmoney/service-java:@dockerfile.base.service.tag@
