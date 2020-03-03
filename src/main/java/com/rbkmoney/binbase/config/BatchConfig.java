@@ -8,6 +8,7 @@ import com.rbkmoney.binbase.batch.writer.BinRangeWriter;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.service.BinbaseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -26,6 +27,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import java.util.Map;
 
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
@@ -44,6 +46,7 @@ public class BatchConfig {
     public MultiResourceItemReader multiResourceItemReader(
             StaxEventItemReader<BinBaseData> itemReader,
             @Value("${batch.file_path}/*.xml") Resource[] resources) {
+        log.error(">>>>>>>>>> {}", resources);
         return new MultiResourceItemReaderBuilder<BinBaseData>()
                 .name("multiResourceItemReader")
                 .delegate(itemReader)

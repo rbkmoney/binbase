@@ -13,8 +13,8 @@ spring:
     password: @db.password@
   batch:
     initialize-schema: always
-    job:
-      enabled: false
+#    job:
+#      enabled: false
 
 batch:
   file_path: "file:"
