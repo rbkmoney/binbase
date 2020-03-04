@@ -8,9 +8,13 @@ ENV DATA_DIR "/var/lib/postgresql/@postgresql.version@/data"
 ENV PG_INITDB_OPTS "--username=postgres --auth-host=trust --auth-local=trust --locale=en_US.UTF-8"
 
 ENV ROOT=/tmp/portage-root
-RUN mkdir /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
+
+ENV LD_LIBRARY_PATH=$ROOT/usr/lib64/
+
+RUN mkdir -p /etc/postgresql-@postgresql.version@/ && echo dev-db/postgresql server > /etc/portage/package.use/postgresql \
     && git clone git://git.bakka.su/gentoo-mirror --depth 1 /usr/portage \
-    && emerge --binpkg-respect-use=n sys-libs/ncurses && emerge dev-db/postgresql:@postgresql.version@ sys-libs/readline \
+    && /sbin/ldconfig /$ROOT/usr/lib64/ \
+    && emerge --usepkgonly --binpkg-respect-use dev-db/postgresql:@postgresql.version@ \
     && emerge --config dev-db/postgresql:@postgresql.version@
 
 FROM @dockerfile.registry@/rbkmoney/service-java:@dockerfile.base.service.tag@
