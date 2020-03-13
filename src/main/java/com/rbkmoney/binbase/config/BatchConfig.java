@@ -46,6 +46,9 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
+    public static final String[] FILE_CSV_FIELDS = new String[]{"country", "paymentSystem", "bank", "type", "startBin", "endBin"};
+    public static final String CSV_DELIMITER = ";";
+
 
     @Value("${batch.strict_mode}")
     private boolean strictMode;
@@ -77,7 +80,6 @@ public class BatchConfig {
         marshaller.setClassesToBeBound(BinBaseXmlData.class);
 
         StaxEventItemReader<BinBaseXmlData> staxEventItemReader = new StaxEventItemReader<>();
-        staxEventItemReader.setName("BinBaseXmlReader");
         staxEventItemReader.setFragmentRootElementName("record");
         staxEventItemReader.setUnmarshaller(marshaller);
         staxEventItemReader.setStrict(strictMode);
@@ -89,8 +91,8 @@ public class BatchConfig {
     @Bean
     public FlatFileItemReader<BinBaseCsvData> buildBinBaseCsvReader() {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames("country", "paymentSystem", "bank", "type", "startBin", "endBin");
-        lineTokenizer.setDelimiter(";");
+        lineTokenizer.setNames(FILE_CSV_FIELDS);
+        lineTokenizer.setDelimiter(CSV_DELIMITER);
 
         BeanWrapperFieldSetMapper fieldSetMapper = new BeanWrapperFieldSetMapper();
         fieldSetMapper.setTargetType(BinBaseCsvData.class);
@@ -100,7 +102,6 @@ public class BatchConfig {
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
         FlatFileItemReader<BinBaseCsvData> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setName("BinBaseCsvReader");
         flatFileItemReader.setLineMapper(lineMapper);
         flatFileItemReader.setLinesToSkip(1);
         return flatFileItemReader;
