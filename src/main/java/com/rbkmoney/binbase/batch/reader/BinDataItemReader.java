@@ -1,6 +1,7 @@
 package com.rbkmoney.binbase.batch.reader;
 
 import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
@@ -9,17 +10,13 @@ import org.springframework.batch.item.file.ResourceAwareItemReaderItemStream;
 import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.core.io.Resource;
 
+@RequiredArgsConstructor
 public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T> {
 
     private ResourceClassifier classifier;
     private Resource resource;
-    private StaxEventItemReader<T> staxEventItemReader;
-    private FlatFileItemReader<T> flatFileItemReader;
-
-    public BinDataItemReader(StaxEventItemReader staxEventItemReader, FlatFileItemReader flatFileItemReader) {
-        this.staxEventItemReader = staxEventItemReader;
-        this.flatFileItemReader = flatFileItemReader;
-    }
+    private final StaxEventItemReader<T> staxEventItemReader;
+    private final FlatFileItemReader<T> flatFileItemReader;
 
     public void setClassifier(ResourceClassifier classifier) {
         this.classifier = classifier;
