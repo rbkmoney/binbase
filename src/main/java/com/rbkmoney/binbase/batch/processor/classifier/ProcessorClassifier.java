@@ -18,6 +18,6 @@ public class ProcessorClassifier<T> implements Classifier<T, ItemProcessor> {
 
     @Override
     public ItemProcessor classify(T data) {
-        return data.getClass().getName().equals(BinBaseXmlData.class.getName()) ? binBaseXmlProcessor : binBaseCsvProcessor;
+        return data.getClass().isAssignableFrom(BinBaseXmlData.class) ? binBaseXmlProcessor : binBaseCsvProcessor;
     }
 }

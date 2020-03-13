@@ -92,11 +92,12 @@ public class BatchConfig {
         lineTokenizer.setNames("country", "paymentSystem", "bank", "type", "startBin", "endBin");
         lineTokenizer.setDelimiter(";");
 
+        BeanWrapperFieldSetMapper fieldSetMapper = new BeanWrapperFieldSetMapper();
+        fieldSetMapper.setTargetType(BinBaseCsvData.class);
+
         DefaultLineMapper lineMapper = new DefaultLineMapper();
         lineMapper.setLineTokenizer(lineTokenizer);
-        lineMapper.setFieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
-            setTargetType(BinBaseCsvData.class);
-        }});
+        lineMapper.setFieldSetMapper(fieldSetMapper);
 
         FlatFileItemReader<BinBaseCsvData> flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setName("BinBaseCsvReader");
