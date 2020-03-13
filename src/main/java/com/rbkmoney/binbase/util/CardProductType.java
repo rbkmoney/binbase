@@ -50,7 +50,6 @@ public enum CardProductType {
     MPC("MPC"), //MIR Premium Credit
 
     //CREDIT_OR_DEBIT
-
     P("P"),        //Visa Gold
     MCT("MCT"), //Titanium Mastercard Card
     PRD("PRD"), //MIR Advanced
