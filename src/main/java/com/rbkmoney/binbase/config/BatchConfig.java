@@ -125,7 +125,7 @@ public class BatchConfig {
     @Bean
     public Step step(MultiResourceItemReader multiResourceItemReader) {
         return stepBuilderFactory.get("binBaseStep")
-                .<BinBaseXmlData, Map.Entry<BinData, Range<Long>>>chunk(1000)
+                .<Resource, Map.Entry<BinData, Range<Long>>>chunk(1000)
                 .reader(multiResourceItemReader)
                 .processor(compositeProcessor())
                 .writer(new BinRangeWriter(binbaseService))
