@@ -1,10 +1,13 @@
 package com.rbkmoney.binbase.util;
 
 import com.rbkmoney.binbase.domain.CardType;
+import com.rbkmoney.binbase.domain.CountryCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Getter
@@ -205,10 +208,22 @@ public enum CardProductType {
     private static final CardProductType[] CREDIT_OR_DEBIT = {
             P, MCT, PRD, NPD, CCD, N, UCG, MBK, JC, MCP, FOUR, N2, S2, I, B, A, MPL, MCS, F, MCG, MCW, MCE, MWE, MNW, WBE, MSI
     };
+    private static final Map<String, CardProductType> valueMap = new HashMap<>();
+
+    static {
+        for (CardProductType cpt : values()) {
+            valueMap.put(cpt.value, cpt);
+        }
+    }
 
     private final String value;
 
-    public static CardType findByValue(String value) {
+    public static CardType getbyValye(String value) {
+        return convertValueToCardType(valueMap.get(value));
+    }
+
+    public static CardType convertValueToCardType(CardProductType value) {
+        System.out.println(Arrays.asList(CardProductType.CREDIT));
         if (Arrays.asList(CardProductType.CREDIT).contains(value)) {
             return CardType.credit;
         } else if (Arrays.asList(CardProductType.DEBIT).contains(value)) {
