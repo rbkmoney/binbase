@@ -46,8 +46,8 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
-    public static final String[] FILE_CSV_FIELDS = new String[]{"country", "paymentSystem", "bank", "type", "startBin", "endBin"};
-    public static final String CSV_DELIMITER = ";";
+    private final String[] FILE_CSV_FIELDS = new String[]{"country", "paymentSystem", "bank", "type", "startBin", "endBin"};
+    private final String CSV_DELIMITER = ";";
 
 
     @Value("${batch.strict_mode}")
