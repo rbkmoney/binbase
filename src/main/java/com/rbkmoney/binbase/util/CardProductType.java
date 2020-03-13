@@ -223,7 +223,6 @@ public enum CardProductType {
     }
 
     public static CardType convertValueToCardType(CardProductType value) {
-        System.out.println(Arrays.asList(CardProductType.CREDIT));
         if (Arrays.asList(CardProductType.CREDIT).contains(value)) {
             return CardType.credit;
         } else if (Arrays.asList(CardProductType.DEBIT).contains(value)) {
