@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlRootElement(name = "record")
-public class BinBaseData {
+public class BinBaseXmlData {
 
     private String bin;
     private String brand;

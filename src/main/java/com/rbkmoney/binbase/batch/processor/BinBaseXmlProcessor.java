@@ -1,7 +1,7 @@
 package com.rbkmoney.binbase.batch.processor;
 
 import com.google.common.collect.Range;
-import com.rbkmoney.binbase.batch.BinBaseData;
+import com.rbkmoney.binbase.batch.BinBaseXmlData;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.domain.CardType;
 import com.rbkmoney.binbase.domain.CountryCode;
@@ -14,10 +14,10 @@ import static com.rbkmoney.binbase.util.BinBaseConstant.MAX_UPPER_ENDPOINT;
 import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_MIN_LOWER_ENDPOINT;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
-public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry<BinData, Range<Long>>> {
+public class BinBaseXmlProcessor implements ItemProcessor<BinBaseXmlData, Map.Entry<BinData, Range<Long>>> {
 
     @Override
-    public Map.Entry<BinData, Range<Long>> process(BinBaseData binBaseXmlData) throws Exception {
+    public Map.Entry<BinData, Range<Long>> process(BinBaseXmlData binBaseXmlData) throws Exception {
         BinData binData = new BinData();
         binData.setPaymentSystem(binBaseXmlData.getBrand());
         binData.setBankName(binBaseXmlData.getBank());
