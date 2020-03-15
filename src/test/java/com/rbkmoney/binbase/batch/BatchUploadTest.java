@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.rbkmoney.binbase.domain.CountryCode.getByAlpha3Code;
 import static org.junit.Assert.*;
 
 
@@ -32,15 +33,15 @@ public class BatchUploadTest extends AbstractIntegrationTest {
     public void testLookupData() throws TException {
         ResponseData responseData = binbaseClient.lookup("100001", Reference.last(new Last()));
         assertEquals(3L, responseData.getVersion());
-        assertEquals(CountryCode.US, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.US, getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertEquals(CardType.credit, responseData.getBinData().getCardType());
         responseData = binbaseClient.lookup("100001", Reference.version(2L));
         assertEquals(2L, responseData.getVersion());
-        assertEquals(CountryCode.US, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.US, getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertEquals(CardType.credit_or_debit, responseData.getBinData().getCardType());
         responseData = binbaseClient.lookup("100001", Reference.version(1L));
         assertEquals(1L, responseData.getVersion());
-        assertEquals(CountryCode.CA, CountryCode.getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
+        assertEquals(CountryCode.CA, getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
         assertNull(responseData.getBinData().getCardType());
 
         responseData = binbaseClient.lookup("100115", Reference.last(new Last()));
@@ -49,6 +50,14 @@ public class BatchUploadTest extends AbstractIntegrationTest {
 
         responseData = binbaseClient.lookup("100117", Reference.last(new Last()));
         assertEquals(1L, responseData.getVersion());
+
+        responseData = binbaseClient.lookup("430288", Reference.last(new Last()));
+        assertEquals(1L, responseData.getVersion());
+        assertEquals(CountryCode.AW, getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
+
+        responseData = binbaseClient.lookup("4302885002", Reference.last(new Last()));
+        assertEquals(4L, responseData.getVersion());
+        assertEquals(CountryCode.AW, getByAlpha3Code(responseData.getBinData().getIsoCountryCode()));
     }
 
     @Test(expected = BinNotFound.class)
