@@ -94,10 +94,12 @@ public class BatchConfig {
         lineTokenizer.setNames(FILE_CSV_FIELDS);
         lineTokenizer.setDelimiter(CSV_DELIMITER);
 
-        BeanWrapperFieldSetMapper fieldSetMapper = new BeanWrapperFieldSetMapper();
+        BeanWrapperFieldSetMapper<BinBaseCsvData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(BinBaseCsvData.class);
 
-        DefaultLineMapper lineMapper = new DefaultLineMapper();
+        DefaultLineMapper<BinBaseCsvData> lineMapper = new DefaultLineMapper<>();
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
