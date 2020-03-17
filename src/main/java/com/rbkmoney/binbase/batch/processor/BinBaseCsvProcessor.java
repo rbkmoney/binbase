@@ -10,11 +10,9 @@ import org.springframework.batch.item.ItemProcessor;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_MIN_LOWER_ENDPOINT;
-import static com.rbkmoney.binbase.util.BinBaseConstant.MAX_UPPER_ENDPOINT;
 import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
-public class BinBaseCsvProcessor implements ItemProcessor<BinBaseCsvData, Map.Entry<BinData, Range<Long>>> {
+public class BinBaseCsvProcessor extends BinBaseItemProcessor implements ItemProcessor<BinBaseCsvData, Map.Entry<BinData, Range<Long>>> {
 
     @Override
     public Map.Entry<BinData, Range<Long>> process(BinBaseCsvData binBaseCsvData) throws Exception {
@@ -22,25 +20,14 @@ public class BinBaseCsvProcessor implements ItemProcessor<BinBaseCsvData, Map.En
         binData.setPaymentSystem(binBaseCsvData.getPaymentSystem());
         binData.setBankName(binBaseCsvData.getBank());
         binData.setIsoCountryCode(CountryCode.getByAlpha3Code(binBaseCsvData.getCountry()));
-        binData.setCardType(CardProductType.getbyValye(binBaseCsvData.getType()));
+        binData.setCardType(CardProductType.getByValye(binBaseCsvData.getType()));
         Range<Long> range;
         if (binBaseCsvData.getStartBin().equals(binBaseCsvData.getEndBin())) {
             range = buildRange(binBaseCsvData.getStartBin());
         } else {
             range = Range.openClosed(toLongValue(binBaseCsvData.getStartBin()), toLongValue(binBaseCsvData.getEndBin()));
         }
-        return new AbstractMap.SimpleEntry(binData, range);
-    }
-
-    private Range<Long> buildRange(String bin) {
-        long lowerEndpoint = toLongValue(bin);
-        long nextBin = toLongValue(String.format("%06d", Long.valueOf(bin) + 1L));
-        long upperEndpoint = (nextBin == DEFAULT_MIN_LOWER_ENDPOINT) ? MAX_UPPER_ENDPOINT : nextBin;
-
-        return Range.openClosed(
-                lowerEndpoint,
-                upperEndpoint
-        );
+        return new AbstractMap.SimpleEntry<>(binData, range);
     }
 
 }

@@ -1,11 +1,12 @@
 package com.rbkmoney.binbase.batch;
 
+import com.rbkmoney.binbase.util.BinBaseDataType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BinBaseCsvData {
+public class BinBaseCsvData extends BinBaseData {
 
     private String country;
     private String paymentSystem;
@@ -14,4 +15,8 @@ public class BinBaseCsvData {
     private String startBin;
     private String endBin;
 
+    @Override
+    public BinBaseDataType getDataType() {
+        return BinBaseDataType.CSV;
+    }
 }

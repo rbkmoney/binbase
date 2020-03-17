@@ -9,4 +9,7 @@ public class BinBaseConstant {
     public static final int DEFAULT_SIZE = 18;
     public static final int RIGHT_PAD_SIZE = 18;
 
+    public static final String FILE_EXTENSION_XML = "xml";
+    public static final String FILE_EXTENSION_CSV = "csv";
+
 }
