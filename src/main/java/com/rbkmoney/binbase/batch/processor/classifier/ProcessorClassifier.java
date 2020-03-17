@@ -12,13 +12,13 @@ import org.springframework.classify.Classifier;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class ProcessorClassifier<T> implements Classifier<BinBaseData, ItemProcessor<T, Map.Entry<BinData, Range<Long>>>> {
+public class ProcessorClassifier<T> implements Classifier<BinBaseData, ItemProcessor<?, Map.Entry<BinData, Range<Long>>>> {
 
     private final BinBaseCsvProcessor binBaseCsvProcessor;
     private final BinBaseXmlProcessor binBaseXmlProcessor;
 
     @Override
-    public ItemProcessor classify(BinBaseData data) {
+    public ItemProcessor<?, Map.Entry<BinData, Range<Long>>> classify(BinBaseData data) {
         switch (data.getDataType()) {
             case XML:
                 return binBaseXmlProcessor;

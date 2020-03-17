@@ -20,7 +20,7 @@ public class BinBaseCsvProcessor extends BinBaseItemProcessor implements ItemPro
         binData.setPaymentSystem(binBaseCsvData.getPaymentSystem());
         binData.setBankName(binBaseCsvData.getBank());
         binData.setIsoCountryCode(CountryCode.getByAlpha3Code(binBaseCsvData.getCountry()));
-        binData.setCardType(CardProductType.getByValye(binBaseCsvData.getType()));
+        binData.setCardType(CardProductType.getByValue(binBaseCsvData.getType()));
         Range<Long> range;
         if (binBaseCsvData.getStartBin().equals(binBaseCsvData.getEndBin())) {
             range = buildRange(binBaseCsvData.getStartBin());

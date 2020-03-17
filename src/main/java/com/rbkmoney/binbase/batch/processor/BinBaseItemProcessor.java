@@ -8,7 +8,7 @@ import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
 
 public abstract class BinBaseItemProcessor {
 
-    public Range<Long> buildRange(String bin) {
+    protected Range<Long> buildRange(String bin) {
         long lowerEndpoint = toLongValue(bin);
         long nextBin = toLongValue(String.format("%06d", Long.parseLong(bin) + 1L));
         long upperEndpoint = (nextBin == DEFAULT_MIN_LOWER_ENDPOINT) ? MAX_UPPER_ENDPOINT : nextBin;

@@ -217,7 +217,7 @@ public enum CardProductType {
 
     private final String value;
 
-    public static CardType getByValye(String value) {
+    public static CardType getByValue(String value) {
         return convertValueToCardType(valueMap.get(value));
     }
 
