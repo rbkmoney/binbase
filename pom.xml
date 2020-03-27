@@ -106,7 +106,7 @@
         <dependency>
             <groupId>com.rbkmoney.woody</groupId>
             <artifactId>woody-thrift</artifactId>
-            <version>1.1.15</version>
+            <version>1.1.16</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>cds-proto</artifactId>
-            <version>1.54-708b363</version>
+            <version>1.57-b58a3fd</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
