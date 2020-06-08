@@ -36,6 +36,9 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
             CountryCode.getByNumericCode(rs.getString("iso_country_code")),
             StringUtils.hasText(rs.getString("card_type"))
                     ? TypeUtil.toEnumField(rs.getString("card_type"), CardType.class)
+                    : null,
+            StringUtils.hasText(rs.getString("category"))
+                    ? rs.getString("category")
                     : null);
 
     @Autowired
@@ -47,7 +50,7 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPan(long pan) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND bin_range.bin_data_id = bin_data.id) " +
                     "ORDER BY version_id DESC LIMIT 1";
@@ -68,7 +71,7 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(long pan, long versionId) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND version_id = :version_id AND bin_range.bin_data_id = bin_data.id)";
             return getNamedParameterJdbcTemplate().queryForObject(
@@ -90,7 +93,7 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByBinDataId(long id) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
                     "FROM binbase.bin_data JOIN binbase.bin_range " +
                     "ON bin_data.id = bin_range.bin_data_id " +
                     "WHERE bin_range.id = :id";
@@ -112,8 +115,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public long save(BinData binData) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "INSERT INTO binbase.bin_data (payment_system, bank_name, card_type, iso_country_code) " +
-                    "VALUES (coalesce(:payment_system, ''), coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, '')) " +
+            String namedSql = "INSERT INTO binbase.bin_data (payment_system, bank_name, card_type, iso_country_code, category) " +
+                    "VALUES (coalesce(:payment_system, ''), coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), coalesce(:category, '')) " +
                     "ON CONFLICT (payment_system, bank_name, card_type, iso_country_code) " +
                     "DO UPDATE SET (payment_system, bank_name, card_type, iso_country_code) = (:payment_system, " +
                     "coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, '')) RETURNING id";
@@ -131,7 +134,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
                             .addValue("iso_country_code",
                                     Optional.ofNullable(binData.getIsoCountryCode())
                                             .map(CountryCode::getNumeric)
-                                            .orElse(null)),
+                                            .orElse(null))
+                            .addValue("category", binData.getCategory()),
                     keyHolder);
 
             if (rowsAffected != 1) {

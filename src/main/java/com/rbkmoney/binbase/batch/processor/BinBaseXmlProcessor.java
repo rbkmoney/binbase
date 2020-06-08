@@ -23,6 +23,7 @@ public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry
         binData.setBankName(binBaseXmlData.getBank());
         binData.setIsoCountryCode(CountryCode.getByNumericCode(binBaseXmlData.getIsonumber()));
         binData.setCardType(convertToCardType(binBaseXmlData.getType()));
+        binData.setCategory(binBaseXmlData.getCategory());
 
         Range<Long> range = buildRange(binBaseXmlData.getBin());
         return new AbstractMap.SimpleEntry(binData, range);

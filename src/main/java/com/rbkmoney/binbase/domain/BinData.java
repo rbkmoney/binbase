@@ -17,4 +17,5 @@ public class BinData {
     private String bankName;
     private CountryCode isoCountryCode;
     private CardType cardType;
+    private String category;
 }
