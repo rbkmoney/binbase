@@ -1,9 +1,14 @@
 package com.rbkmoney.binbase.config;
 
 import com.google.common.collect.Range;
-import com.rbkmoney.binbase.batch.BinBaseData;
+import com.rbkmoney.binbase.batch.BinBaseXmlData;
+import com.rbkmoney.binbase.batch.BinBaseCsvData;
 import com.rbkmoney.binbase.batch.listener.DefaultChunkListener;
+import com.rbkmoney.binbase.batch.processor.BinBaseCsvProcessor;
 import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
+import com.rbkmoney.binbase.batch.processor.classifier.ProcessorClassifier;
+import com.rbkmoney.binbase.batch.reader.BinDataItemReader;
+import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
 import com.rbkmoney.binbase.batch.writer.BinRangeWriter;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.service.BinbaseService;
@@ -14,8 +19,14 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
+import org.springframework.batch.item.support.builder.ClassifierCompositeItemProcessorBuilder;
 import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -35,16 +46,18 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
+    private final String[] FILE_CSV_FIELDS = new String[]{"country", "paymentSystem", "bank", "type", "startBin", "endBin"};
+    private final String CSV_DELIMITER = ";";
+
 
     @Value("${batch.strict_mode}")
     private boolean strictMode;
 
     @Bean
     @StepScope
-    public MultiResourceItemReader multiResourceItemReader(
-            StaxEventItemReader<BinBaseData> itemReader,
-            @Value("${batch.file_path}/*.xml") Resource[] resources) {
-        return new MultiResourceItemReaderBuilder<BinBaseData>()
+    public MultiResourceItemReader multiResourceItemReader(BinDataItemReader itemReader,
+                                                           @Value("${batch.file_path}/*.*") Resource[] resources) {
+        return new MultiResourceItemReaderBuilder<Resource[]>()
                 .name("multiResourceItemReader")
                 .delegate(itemReader)
                 .resources(resources)
@@ -54,18 +67,46 @@ public class BatchConfig {
     }
 
     @Bean
-    public StaxEventItemReader<BinBaseData> buildBinBaseXmlReader() {
-        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(BinBaseData.class);
+    public BinDataItemReader binBaseDataBinDataItemReader() {
+        BinDataItemReader binDataItemReader = new BinDataItemReader(buildBinBaseXmlReader(), buildBinBaseCsvReader());
+        binDataItemReader.setClassifier(new ResourceClassifier(
+                buildBinBaseXmlReader(), buildBinBaseCsvReader()));
+        return binDataItemReader;
+    }
 
-        StaxEventItemReader<BinBaseData> staxEventItemReader = new StaxEventItemReader<>();
-        staxEventItemReader.setName("BinBaseXmlReader");
+    @Bean
+    public StaxEventItemReader<BinBaseXmlData> buildBinBaseXmlReader() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(BinBaseXmlData.class);
+
+        StaxEventItemReader<BinBaseXmlData> staxEventItemReader = new StaxEventItemReader<>();
         staxEventItemReader.setFragmentRootElementName("record");
         staxEventItemReader.setUnmarshaller(marshaller);
         staxEventItemReader.setStrict(strictMode);
         staxEventItemReader.setSaveState(true);
 
         return staxEventItemReader;
+    }
+
+    @Bean
+    public FlatFileItemReader<BinBaseCsvData> buildBinBaseCsvReader() {
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setNames(FILE_CSV_FIELDS);
+        lineTokenizer.setDelimiter(CSV_DELIMITER);
+
+        BeanWrapperFieldSetMapper<BinBaseCsvData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(BinBaseCsvData.class);
+
+        DefaultLineMapper<BinBaseCsvData> lineMapper = new DefaultLineMapper<>();
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
+
+        FlatFileItemReader<BinBaseCsvData> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setLineMapper(lineMapper);
+        flatFileItemReader.setLinesToSkip(1);
+        return flatFileItemReader;
     }
 
     @Bean
@@ -77,11 +118,18 @@ public class BatchConfig {
     }
 
     @Bean
+    public ClassifierCompositeItemProcessor compositeProcessor() {
+        return new ClassifierCompositeItemProcessorBuilder()
+                .classifier(new ProcessorClassifier(new BinBaseCsvProcessor(), new BinBaseXmlProcessor()))
+                .build();
+    }
+
+    @Bean
     public Step step(MultiResourceItemReader multiResourceItemReader) {
         return stepBuilderFactory.get("binBaseStep")
-                .<BinBaseData, Map.Entry<BinData, Range<Long>>>chunk(1000)
+                .<Resource, Map.Entry<BinData, Range<Long>>>chunk(1000)
                 .reader(multiResourceItemReader)
-                .processor(new BinBaseXmlProcessor())
+                .processor(compositeProcessor())
                 .writer(new BinRangeWriter(binbaseService))
                 .listener(new DefaultChunkListener())
                 .build();

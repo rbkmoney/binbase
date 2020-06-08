@@ -1,7 +1,7 @@
 package com.rbkmoney.binbase.batch.processor;
 
 import com.google.common.collect.Range;
-import com.rbkmoney.binbase.batch.BinBaseData;
+import com.rbkmoney.binbase.batch.BinBaseXmlData;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.domain.CardType;
 import com.rbkmoney.binbase.domain.CountryCode;
@@ -10,14 +10,10 @@ import org.springframework.batch.item.ItemProcessor;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.MAX_UPPER_ENDPOINT;
-import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_MIN_LOWER_ENDPOINT;
-import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
-
-public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry<BinData, Range<Long>>> {
+public class BinBaseXmlProcessor extends BinBaseItemProcessor implements ItemProcessor<BinBaseXmlData, Map.Entry<BinData, Range<Long>>> {
 
     @Override
-    public Map.Entry<BinData, Range<Long>> process(BinBaseData binBaseXmlData) throws Exception {
+    public Map.Entry<BinData, Range<Long>> process(BinBaseXmlData binBaseXmlData) {
         BinData binData = new BinData();
         binData.setPaymentSystem(binBaseXmlData.getBrand());
         binData.setBankName(binBaseXmlData.getBank());
@@ -26,18 +22,7 @@ public class BinBaseXmlProcessor implements ItemProcessor<BinBaseData, Map.Entry
         binData.setCategory(binBaseXmlData.getCategory());
 
         Range<Long> range = buildRange(binBaseXmlData.getBin());
-        return new AbstractMap.SimpleEntry(binData, range);
-    }
-
-    private Range<Long> buildRange(String bin) {
-        long lowerEndpoint = toLongValue(bin);
-        long nextBin = toLongValue(String.format("%06d", Long.valueOf(bin) + 1L));
-        long upperEndpoint = (nextBin == DEFAULT_MIN_LOWER_ENDPOINT) ? MAX_UPPER_ENDPOINT : nextBin;
-
-        return Range.openClosed(
-                lowerEndpoint,
-                upperEndpoint
-        );
+        return new AbstractMap.SimpleEntry<>(binData, range);
     }
 
     private CardType convertToCardType(String type) {

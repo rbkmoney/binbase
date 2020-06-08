@@ -1,7 +1,7 @@
 package com.rbkmoney.binbase.batch.processor;
 
 import com.google.common.collect.Range;
-import com.rbkmoney.binbase.batch.BinBaseData;
+import com.rbkmoney.binbase.batch.BinBaseXmlData;
 import com.rbkmoney.binbase.domain.BinData;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class BinBaseXmlProcessorTest {
 
     @Test
     public void process() throws Exception {
-        BinBaseData binBaseXmlData = new BinBaseData();
+        BinBaseXmlData binBaseXmlData = new BinBaseXmlData();
         binBaseXmlData.setBin("021502");
         binBaseXmlData.setBrand("PRIVATE LABEL");
         binBaseXmlData.setBank("");
