@@ -111,7 +111,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>binbase-proto</artifactId>
-            <version>1.12-d0e136d</version>
+            <version>1.13-711cc63</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney.geck</groupId>

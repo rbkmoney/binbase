@@ -1,0 +1,1 @@
+ALTER TABLE binbase.bin_data ADD COLUMN category CHARACTER VARYING
