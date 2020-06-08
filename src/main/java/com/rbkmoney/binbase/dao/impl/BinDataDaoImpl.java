@@ -117,9 +117,9 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
             @Language("PostgreSQL")
             String namedSql = "INSERT INTO binbase.bin_data (payment_system, bank_name, card_type, iso_country_code, category) " +
                     "VALUES (coalesce(:payment_system, ''), coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), coalesce(:category, '')) " +
-                    "ON CONFLICT (payment_system, bank_name, card_type, iso_country_code) " +
-                    "DO UPDATE SET (payment_system, bank_name, card_type, iso_country_code) = (:payment_system, " +
-                    "coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, '')) RETURNING id";
+                    "ON CONFLICT (payment_system, bank_name, card_type, iso_country_code, category) " +
+                    "DO UPDATE SET (payment_system, bank_name, card_type, iso_country_code, category) = (:payment_system, " +
+                    "coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), coalesce(:category, '')) RETURNING id";
             KeyHolder keyHolder = new GeneratedKeyHolder();
             int rowsAffected = getNamedParameterJdbcTemplate().update(
                     namedSql,
