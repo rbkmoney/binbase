@@ -1,7 +1,6 @@
 package com.rbkmoney.binbase.util;
 
 import com.rbkmoney.binbase.domain.CardType;
-import com.rbkmoney.binbase.domain.CountryCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -42,7 +42,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
     }
 
     @Override
-    public ResponseData getByBinDataId(Value binDataId) throws BinNotFound, TException{
+    public ResponseData getByBinDataId(Value binDataId) throws BinNotFound, TException {
         log.info("Get bin data, binDataId='{}'", binDataId);
         try {
             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByBinDataId(binDataId.getI());
@@ -56,7 +56,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
     }
 
     @Override
-    public ResponseData getByCardToken(String cardToken) throws BinNotFound, TException{
+    public ResponseData getByCardToken(String cardToken) throws BinNotFound, TException {
         log.info("Get bin data, cardToken='{}'", cardToken);
         try {
             Map.Entry<Long, BinData> binDataWithVersion = binbaseService.getBinDataByCardToken(cardToken);

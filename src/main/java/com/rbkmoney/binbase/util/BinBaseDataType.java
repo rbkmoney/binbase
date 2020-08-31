@@ -1,5 +1,5 @@
 package com.rbkmoney.binbase.util;
 
 public enum BinBaseDataType {
-    XML, CSV
+    XML, CSV, ZIP
 }

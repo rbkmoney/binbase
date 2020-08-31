@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BinBaseCsvData extends BinBaseData {
+public class BinBasePsbCsvData extends BinBaseData {
 
     private String country;
     private String paymentSystem;
