@@ -2,9 +2,7 @@ package com.rbkmoney.binbase.util;
 
 import org.junit.Test;
 
-import static com.rbkmoney.binbase.util.PanUtil.formatPan;
-import static com.rbkmoney.binbase.util.PanUtil.toLongValue;
-import static com.rbkmoney.binbase.util.PanUtil.validatePan;
+import static com.rbkmoney.binbase.util.PanUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

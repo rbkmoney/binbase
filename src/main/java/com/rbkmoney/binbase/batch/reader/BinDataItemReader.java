@@ -13,8 +13,7 @@ import org.springframework.core.io.Resource;
 
 import java.util.Objects;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_EXTENSION_CSV;
-import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_EXTENSION_XML;
+import static com.rbkmoney.binbase.util.BinBaseConstant.*;
 
 @RequiredArgsConstructor
 public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T> {
@@ -23,6 +22,7 @@ public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T
     private Resource resource;
     private final StaxEventItemReader<T> staxEventItemReader;
     private final FlatFileItemReader<T> flatFileItemReader;
+    private final FlatFileItemReader<T> zipFlatFileItemReader;
 
     public void setClassifier(ResourceClassifier<T> classifier) {
         this.classifier = classifier;
@@ -49,9 +49,14 @@ public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T
             case FILE_EXTENSION_XML:
                 staxEventItemReader.setResource(resource);
                 staxEventItemReader.open(executionContext);
+                break;
             case FILE_EXTENSION_CSV:
                 flatFileItemReader.setResource(resource);
                 flatFileItemReader.open(executionContext);
+                break;
+            case FILE_EXTENSION_ZIP:
+                zipFlatFileItemReader.setResource(resource);
+                zipFlatFileItemReader.open(executionContext);
         }
     }
 

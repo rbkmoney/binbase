@@ -1,14 +1,17 @@
 package com.rbkmoney.binbase.config;
 
 import com.google.common.collect.Range;
+import com.rbkmoney.binbase.batch.BinBasePsbCsvData;
 import com.rbkmoney.binbase.batch.BinBaseXmlData;
-import com.rbkmoney.binbase.batch.BinBaseCsvData;
+import com.rbkmoney.binbase.batch.BinBaseZipCsvData;
 import com.rbkmoney.binbase.batch.listener.DefaultChunkListener;
-import com.rbkmoney.binbase.batch.processor.BinBaseCsvProcessor;
+import com.rbkmoney.binbase.batch.processor.BinBasePsbCsvProcessor;
 import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
+import com.rbkmoney.binbase.batch.processor.BinBaseZipCsvProcessor;
 import com.rbkmoney.binbase.batch.processor.classifier.ProcessorClassifier;
 import com.rbkmoney.binbase.batch.reader.BinDataItemReader;
 import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
+import com.rbkmoney.binbase.batch.reader.factory.ZipBufferedReaderFactory;
 import com.rbkmoney.binbase.batch.writer.BinRangeWriter;
 import com.rbkmoney.binbase.domain.BinData;
 import com.rbkmoney.binbase.service.BinbaseService;
@@ -37,6 +40,9 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import java.util.Map;
 
+import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_PSB_CSV_FIELDS;
+import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_ZIP_CSV_FIELDS;
+
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
@@ -46,9 +52,7 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
-    private final String[] FILE_CSV_FIELDS = new String[]{"country", "paymentSystem", "bank", "type", "startBin", "endBin"};
     private final String CSV_DELIMITER = ";";
-
 
     @Value("${batch.strict_mode}")
     private boolean strictMode;
@@ -68,9 +72,9 @@ public class BatchConfig {
 
     @Bean
     public BinDataItemReader binBaseDataBinDataItemReader() {
-        BinDataItemReader binDataItemReader = new BinDataItemReader(buildBinBaseXmlReader(), buildBinBaseCsvReader());
+        BinDataItemReader binDataItemReader = new BinDataItemReader(buildBinBaseXmlReader(), buildBinBasePsbCsvReader(), buildBinBaseZipCsvReader());
         binDataItemReader.setClassifier(new ResourceClassifier(
-                buildBinBaseXmlReader(), buildBinBaseCsvReader()));
+                buildBinBaseXmlReader(), buildBinBasePsbCsvReader(), buildBinBaseZipCsvReader()));
         return binDataItemReader;
     }
 
@@ -89,21 +93,47 @@ public class BatchConfig {
     }
 
     @Bean
-    public FlatFileItemReader<BinBaseCsvData> buildBinBaseCsvReader() {
+    public ZipBufferedReaderFactory gzipBufferedReaderFactory() {
+        return new ZipBufferedReaderFactory();
+    }
+
+    @Bean
+    public FlatFileItemReader<BinBaseZipCsvData> buildBinBaseZipCsvReader() {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames(FILE_CSV_FIELDS);
+        lineTokenizer.setNames(FILE_ZIP_CSV_FIELDS);
         lineTokenizer.setDelimiter(CSV_DELIMITER);
 
-        BeanWrapperFieldSetMapper<BinBaseCsvData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(BinBaseCsvData.class);
+        BeanWrapperFieldSetMapper<BinBaseZipCsvData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(BinBaseZipCsvData.class);
 
-        DefaultLineMapper<BinBaseCsvData> lineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<BinBaseZipCsvData> lineMapper = new DefaultLineMapper<>();
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
-        FlatFileItemReader<BinBaseCsvData> flatFileItemReader = new FlatFileItemReader<>();
+        FlatFileItemReader<BinBaseZipCsvData> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setLineMapper(lineMapper);
+        flatFileItemReader.setBufferedReaderFactory(gzipBufferedReaderFactory());
+        return flatFileItemReader;
+    }
+
+    @Bean
+    public FlatFileItemReader<BinBasePsbCsvData> buildBinBasePsbCsvReader() {
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setNames(FILE_PSB_CSV_FIELDS);
+        lineTokenizer.setDelimiter(CSV_DELIMITER);
+
+        BeanWrapperFieldSetMapper<BinBasePsbCsvData> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(BinBasePsbCsvData.class);
+
+        DefaultLineMapper<BinBasePsbCsvData> lineMapper = new DefaultLineMapper<>();
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(fieldSetMapper);
+
+        FlatFileItemReader<BinBasePsbCsvData> flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setLineMapper(lineMapper);
         flatFileItemReader.setLinesToSkip(1);
         return flatFileItemReader;
@@ -120,7 +150,7 @@ public class BatchConfig {
     @Bean
     public ClassifierCompositeItemProcessor compositeProcessor() {
         return new ClassifierCompositeItemProcessorBuilder()
-                .classifier(new ProcessorClassifier(new BinBaseCsvProcessor(), new BinBaseXmlProcessor()))
+                .classifier(new ProcessorClassifier(new BinBasePsbCsvProcessor(), new BinBaseXmlProcessor(), new BinBaseZipCsvProcessor()))
                 .build();
     }
 
