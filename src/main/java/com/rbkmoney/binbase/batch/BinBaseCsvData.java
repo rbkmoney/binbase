@@ -6,14 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BinBasePsbCsvData extends BinBaseData {
+public class BinBaseCsvData extends BinBaseData {
 
-    private String country;
-    private String paymentSystem;
-    private String bank;
-    private String type;
-    private String startBin;
-    private String endBin;
+    private String binLength;
+    private String affiliation;
+    private String mark;
 
     @Override
     public BinBaseDataType getDataType() {

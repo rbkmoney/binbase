@@ -11,15 +11,5 @@ public class BinBaseConstant {
 
     public static final String FILE_EXTENSION_XML = "xml";
     public static final String FILE_EXTENSION_CSV = "csv";
-    public static final String FILE_EXTENSION_ZIP = "zip";
-
-    public static final String[] FILE_PSB_CSV_FIELDS = new String[]{
-            "country", "paymentSystem", "bank", "type", "startBin", "endBin"
-    };
-    public static final String[] FILE_ZIP_CSV_FIELDS = new String[]{
-            "bin", "brand", "bank", "type", "category", "isoname", "isoa2", "isoa3",
-            "isonumber", "url", "phone", "bin_length", "affiliation", "mark"
-    };
-
 
 }
