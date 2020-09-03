@@ -25,11 +25,11 @@
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <shared.resources.version>0.3.6</shared.resources.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <db.name>binbase</db.name>
+        <db.name>y</db.name>
         <db.port>5432</db.port>
         <db.url>jdbc:postgresql://localhost:${db.port}/${db.name}</db.url>
         <db.user>postgres</db.user>
-        <db.password>postgres</db.password>
+        <db.password>admin</db.password>
         <db.schema>binbase</db.schema>
         <postgresql.version>9.6</postgresql.version>
         <postgresql.jdbc.version>9.4.1212</postgresql.jdbc.version>
