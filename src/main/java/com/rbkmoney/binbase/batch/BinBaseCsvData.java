@@ -25,6 +25,6 @@ public class BinBaseCsvData extends BinBaseData {
 
     @Override
     public BinBaseDataType getDataType() {
-        return BinBaseDataType.ZIP;
+        return BinBaseDataType.CSV;
     }
 }
