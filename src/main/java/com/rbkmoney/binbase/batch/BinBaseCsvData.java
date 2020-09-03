@@ -19,7 +19,7 @@ public class BinBaseCsvData extends BinBaseData {
     private String isonumber;
     private String url;
     private String phone;
-    private String bin_length;
+    private String binLength;
     private String affiliation;
     private String mark;
 
