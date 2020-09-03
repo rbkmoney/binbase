@@ -15,7 +15,7 @@ spring:
     initialize-schema: always
 
 batch:
-  file_path: classpath:data/binbase/case1
+  file_path: "file:"
   strict_mode: true
   shutdown_after_execute: false
 
