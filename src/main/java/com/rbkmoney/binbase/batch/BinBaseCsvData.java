@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class BinBaseZipCsvData extends BinBaseData {
+public class BinBaseCsvData extends BinBaseData {
 
     private String bin;
     private String brand;

@@ -15,7 +15,6 @@ public class ResourceClassifier<T> implements Classifier<Resource, ResourceAware
 
     private final ResourceAwareItemReaderItemStream<T> staxEventItemReader;
     private final ResourceAwareItemReaderItemStream<T> flatFileItemReader;
-    private final ResourceAwareItemReaderItemStream<T> zipFlatFileItemReader;
 
     @Override
     public ResourceAwareItemReaderItemStream<T> classify(Resource resource) {
@@ -25,8 +24,6 @@ public class ResourceClassifier<T> implements Classifier<Resource, ResourceAware
                 return staxEventItemReader;
             case FILE_EXTENSION_CSV:
                 return flatFileItemReader;
-            case FILE_EXTENSION_ZIP:
-                return zipFlatFileItemReader;
             default:
                 throw new IllegalArgumentException("Unsupported file format: " + resource.getFilename());
         }
