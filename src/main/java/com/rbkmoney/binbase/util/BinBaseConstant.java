@@ -12,10 +12,4 @@ public class BinBaseConstant {
     public static final String FILE_EXTENSION_XML = "xml";
     public static final String FILE_EXTENSION_CSV = "csv";
 
-    public static final String[] FILE_CSV_FIELDS = new String[]{
-            "bin", "brand", "bank", "type", "category", "isoname", "isoa2", "isoa3",
-            "isonumber", "url", "phone", "bin_length", "affiliation", "mark"
-    };
-
-
 }

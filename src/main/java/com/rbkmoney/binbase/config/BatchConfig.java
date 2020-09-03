@@ -37,8 +37,6 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import java.util.Map;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_CSV_FIELDS;
-
 @Configuration
 @EnableBatchProcessing
 @EnableAutoConfiguration
@@ -49,6 +47,10 @@ public class BatchConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
     private final String CSV_DELIMITER = ";";
+    private final String[] FILE_CSV_FIELDS = new String[]{
+            "bin", "brand", "bank", "type", "category", "isoname", "isoa2", "isoa3",
+            "isonumber", "url", "phone", "bin_length", "affiliation", "mark"
+    };
 
     @Value("${batch.strict_mode}")
     private boolean strictMode;
