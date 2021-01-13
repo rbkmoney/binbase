@@ -1,7 +1,6 @@
 package com.rbkmoney.binbase.util;
 
-
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+import net.logstash.logback.encoder.org.apache.commons.lang3.StringUtils;
 
 import static com.rbkmoney.binbase.util.BinBaseConstant.DEFAULT_SIZE;
 import static com.rbkmoney.binbase.util.BinBaseConstant.RIGHT_PAD_SIZE;
