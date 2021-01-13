@@ -36,9 +36,9 @@ public class BinDataDaoTest extends AbstractIntegrationTest {
         BinData binData = random(BinData.class);
 
         long binDataId = binDataDao.save(binData);
-        long binRangeId = binRangeDao.save(new BinRange(1L, 2L, 1L, binDataId));
+        binRangeDao.save(new BinRange(1L, 2L, 1L, binDataId));
         binRangeDao.save(new BinRange(2L, 3L, 1L, binDataId));
-        binRangeDao.save(new BinRange(3L, 4L, 1L, binDataId));
+        long binRangeId = binRangeDao.save(new BinRange(3L, 4L, 1L, binDataId));
 
         assertEquals(binData, binDataDao.getBinDataByBinDataId(binRangeId).getValue());
     }

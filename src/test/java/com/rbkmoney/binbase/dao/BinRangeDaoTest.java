@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class BinRangeDaoTest extends AbstractIntegrationTest {
@@ -36,7 +37,7 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
         assertEquals(binRange, binRangeDao.getIntersectionRanges(binRange.getRange()).get(0));
     }
 
-    @Test(expected = DaoException.class)
+    @Test
     public void testWhenRangesConflict() throws DaoException {
         BinData binData = random(BinData.class);
         long binDataId = binDataDao.save(binData);
@@ -49,6 +50,28 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
 
         binRange.setRange(Range.openClosed(1500000000000000000L, 2500000000000000000L));
         binRangeDao.save(binRange);
+
+        assertEquals(1, binRangeDao.getIntersectionRanges(Range.openClosed(1000000000000000000L, 2500000000000000000L)).size());
+    }
+
+    @Test
+    public void testMergeAdjacent() throws DaoException {
+        BinData binData = random(BinData.class);
+        long binDataId = binDataDao.save(binData);
+
+        BinRange binRange = new BinRange();
+        binRange.setRange(Range.openClosed(1000000000000000000L, 2000000000000000000L));
+        binRange.setVersionId(1L);
+        binRange.setBinDataId(binDataId);
+        binRangeDao.save(binRange);
+
+        binRange.setRange(Range.openClosed(2000000000000000000L, 3000000000000000000L));
+        binRangeDao.save(binRange);
+
+        binRange.setRange(Range.openClosed(3000000000000000000L, 4000000000000000000L));
+        binRangeDao.save(binRange);
+
+        assertEquals(1, binRangeDao.getIntersectionRanges(Range.openClosed(1000000000000000000L, 2000000000000000000L)).size());
     }
 
     @Test
@@ -65,20 +88,4 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
 
     }
 
-//    @Test
-//    public void testGetIntersectionRange() throws DaoException {
-//        BinData binData = random(BinData.class);
-//        long binDataId = binDataDao.save(binData);
-//
-//        BinRange binRange = new BinRange();
-//        binRange.setRange(Range.openClosed(1000000000000000000L, 2000000000000000000L));
-//        binRange.setVersionId(1L);
-//        binRange.setBinDataId(binDataId);
-//        binRangeDao.save(binRange);
-//
-//        binRange.setVersionId(2L);
-//        binRangeDao.save(binRange);
-//
-//        System.out.println(binRangeDao.getIntersectionRanges(binRange.getRange()));
-//    }
 }

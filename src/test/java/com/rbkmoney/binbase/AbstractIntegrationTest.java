@@ -23,8 +23,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public abstract class AbstractIntegrationTest {
 
     @ClassRule
-    public static PostgreSQLContainer postgres = (PostgreSQLContainer) new PostgreSQLContainer("postgres:9.6")
-            .withStartupTimeout(Duration.ofMinutes(5));
+    public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:9.6.8");
 
     @LocalServerPort
     protected int port;
