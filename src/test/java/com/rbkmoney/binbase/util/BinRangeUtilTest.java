@@ -5,9 +5,7 @@ import com.google.common.collect.Range;
 import com.rbkmoney.binbase.domain.BinRange;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.rbkmoney.binbase.util.BinRangeUtil.getLastIntersectionRanges;
 import static com.rbkmoney.binbase.util.BinRangeUtil.subtractFromRange;
@@ -78,12 +76,20 @@ public class BinRangeUtilTest {
 
         assertEquals(
                 Collections.singleton(Range.openClosed(20, 40)),
-                subtractFromRange(Range.openClosed(10, 50), Arrays.asList(Range.openClosed(0, 20), Range.openClosed(40, 60)))
+                subtractFromRange(
+                        Range.openClosed(10, 50),
+                        Arrays.asList(Range.openClosed(0, 20), Range.openClosed(40, 60)))
         );
 
         assertEquals(
                 ImmutableSet.of(Range.openClosed(20, 25), Range.openClosed(26, 35), Range.openClosed(36, 40)),
-                subtractFromRange(Range.openClosed(10, 50), Arrays.asList(Range.openClosed(35, 36), Range.openClosed(25, 26), Range.openClosed(0, 20), Range.openClosed(40, 60)))
+                subtractFromRange(
+                        Range.openClosed(10, 50),
+                        Arrays.asList(
+                                Range.openClosed(35, 36),
+                                Range.openClosed(25, 26),
+                                Range.openClosed(0, 20),
+                                Range.openClosed(40, 60)))
         );
     }
 

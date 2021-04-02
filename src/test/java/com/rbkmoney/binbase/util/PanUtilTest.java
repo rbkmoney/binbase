@@ -1,11 +1,13 @@
 package com.rbkmoney.binbase.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import static com.rbkmoney.binbase.util.PanUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Slf4j
 public class PanUtilTest {
 
     @Test
@@ -16,19 +18,19 @@ public class PanUtilTest {
             validatePan("22003/");
             fail();
         } catch (IllegalArgumentException ex) {
-
+            log.debug("Invalid pan format");
         }
         try {
             validatePan("22003");
             fail();
         } catch (IllegalArgumentException ex) {
-
+            log.debug("Invalid pan format");
         }
         try {
             validatePan("22002002499999999999");
             fail();
         } catch (IllegalArgumentException ex) {
-
+            log.debug("Invalid pan format");
         }
     }
 

@@ -15,7 +15,11 @@ public class PanUtil {
 
     public static long toLongValue(String pan) throws IllegalArgumentException {
         validatePan(pan);
-        return Long.parseLong(StringUtils.rightPad(pan.substring(0, Math.min(pan.length(), RIGHT_PAD_SIZE)), DEFAULT_SIZE, "0"));
+        return Long.parseLong(
+                StringUtils.rightPad(
+                        pan.substring(0, Math.min(pan.length(), RIGHT_PAD_SIZE)),
+                        DEFAULT_SIZE,
+                        "0"));
     }
 
     public static String formatPan(String pan) {

@@ -204,7 +204,8 @@ public enum CardProductType {
     };
 
     private static final CardProductType[] CREDIT_OR_DEBIT = {
-            P, MCT, PRD, NPD, CCD, N, UCG, MBK, JC, MCP, FOUR, N2, S2, I, B, A, MPL, MCS, F, MCG, MCW, MCE, MWE, MNW, WBE, MSI
+            P, MCT, PRD, NPD, CCD, N, UCG, MBK, JC, MCP, FOUR, N2, S2, I, B, A, MPL, MCS, F, MCG, MCW, MCE, MWE,
+            MNW, WBE, MSI
     };
     private static final Map<String, CardProductType> valueMap = new HashMap<>();
 

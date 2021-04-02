@@ -50,7 +50,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPan(long pan) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, " +
+                    "iso_country_code, card_type, version_id, category " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND bin_range.bin_data_id = bin_data.id) " +
                     "ORDER BY version_id DESC LIMIT 1";
@@ -71,7 +72,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByCardPanAndVersion(long pan, long versionId) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, " +
+                    "card_type, version_id, category " +
                     "FROM binbase.bin_range JOIN binbase.bin_data " +
                     "ON (range @> :pan AND version_id = :version_id AND bin_range.bin_data_id = bin_data.id)";
             return getNamedParameterJdbcTemplate().queryForObject(
@@ -93,7 +95,8 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public Map.Entry<Long, BinData> getBinDataByBinDataId(long id) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, card_type, version_id, category " +
+            String namedSql = "SELECT bin_range.id, payment_system, bank_name, iso_country_code, " +
+                    "card_type, version_id, category " +
                     "FROM binbase.bin_data JOIN binbase.bin_range " +
                     "ON bin_data.id = bin_range.bin_data_id " +
                     "WHERE bin_range.id = :id";
@@ -115,11 +118,15 @@ public class BinDataDaoImpl extends NamedParameterJdbcDaoSupport implements BinD
     public long save(BinData binData) throws DaoException {
         try {
             @Language("PostgreSQL")
-            String namedSql = "INSERT INTO binbase.bin_data (payment_system, bank_name, card_type, iso_country_code, category) " +
-                    "VALUES (coalesce(:payment_system, ''), coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), coalesce(:category, '')) " +
+            String namedSql = "INSERT INTO binbase.bin_data (payment_system, bank_name, " +
+                    "card_type, iso_country_code, category) " +
+                    "VALUES (coalesce(:payment_system, ''), coalesce(:bank_name, ''), coalesce(:card_type, ''), " +
+                    "coalesce(:iso_country_code, ''), coalesce(:category, '')) " +
                     "ON CONFLICT (payment_system, bank_name, card_type, iso_country_code, category) " +
-                    "DO UPDATE SET (payment_system, bank_name, card_type, iso_country_code, category) = (:payment_system, " +
-                    "coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), coalesce(:category, '')) RETURNING id";
+                    "DO UPDATE SET (payment_system, bank_name, card_type, iso_country_code, category) = " +
+                    "(:payment_system, " +
+                    "coalesce(:bank_name, ''), coalesce(:card_type, ''), coalesce(:iso_country_code, ''), " +
+                    "coalesce(:category, '')) RETURNING id";
             KeyHolder keyHolder = new GeneratedKeyHolder();
             int rowsAffected = getNamedParameterJdbcTemplate().update(
                     namedSql,

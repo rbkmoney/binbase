@@ -17,7 +17,10 @@ public class BinNotFoundException extends RuntimeException {
         super(cause);
     }
 
-    public BinNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public BinNotFoundException(String message,
+                                Throwable cause,
+                                boolean enableSuppression,
+                                boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class BinRangeDaoTest extends AbstractIntegrationTest {
@@ -51,7 +50,8 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
         binRange.setRange(Range.openClosed(1500000000000000000L, 2500000000000000000L));
         binRangeDao.save(binRange);
 
-        assertEquals(1, binRangeDao.getIntersectionRanges(Range.openClosed(1000000000000000000L, 2500000000000000000L)).size());
+        assertEquals(1, binRangeDao.getIntersectionRanges(
+                Range.openClosed(1000000000000000000L, 2500000000000000000L)).size());
     }
 
     @Test
@@ -71,7 +71,8 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
         binRange.setRange(Range.openClosed(3000000000000000000L, 4000000000000000000L));
         binRangeDao.save(binRange);
 
-        assertEquals(1, binRangeDao.getIntersectionRanges(Range.openClosed(1000000000000000000L, 2000000000000000000L)).size());
+        assertEquals(1, binRangeDao.getIntersectionRanges(
+                Range.openClosed(1000000000000000000L, 2000000000000000000L)).size());
     }
 
     @Test
@@ -80,9 +81,21 @@ public class BinRangeDaoTest extends AbstractIntegrationTest {
         long binDataId = binDataDao.save(binData);
         binRangeDao.save(
                 Arrays.asList(
-                        new BinRange(1000000000000000000L, 2000000000000000000L, 1L, binDataId),
-                        new BinRange(2000000000000000000L, 3000000000000000000L, 1L, binDataId),
-                        new BinRange(3000000000000000000L, 4000000000000000000L, 1L, binDataId)
+                        new BinRange(
+                                1000000000000000000L,
+                                2000000000000000000L,
+                                1L,
+                                binDataId),
+                        new BinRange(
+                                2000000000000000000L,
+                                3000000000000000000L,
+                                1L,
+                                binDataId),
+                        new BinRange(
+                                3000000000000000000L,
+                                4000000000000000000L,
+                                1L,
+                                binDataId)
                 )
         );
 

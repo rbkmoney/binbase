@@ -1,6 +1,7 @@
 package com.rbkmoney.binbase.batch.reader;
 
 import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
+import com.rbkmoney.binbase.exception.ExtensionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +54,7 @@ public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T
                 flatFileItemReader.setResource(resource);
                 flatFileItemReader.open(executionContext);
                 break;
+            default: throw new ExtensionNotFoundException("File extension to open not found");
         }
     }
 

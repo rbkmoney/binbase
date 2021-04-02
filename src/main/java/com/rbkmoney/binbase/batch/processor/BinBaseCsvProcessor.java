@@ -11,7 +11,8 @@ import java.util.Map;
 
 import static com.rbkmoney.binbase.util.CardTypeConverter.convertToCardType;
 
-public class BinBaseCsvProcessor extends BinBaseItemProcessor implements ItemProcessor<BinBaseCsvData, Map.Entry<BinData, Range<Long>>> {
+public class BinBaseCsvProcessor extends BinBaseItemProcessor
+        implements ItemProcessor<BinBaseCsvData, Map.Entry<BinData, Range<Long>>> {
 
     @Override
     public Map.Entry<BinData, Range<Long>> process(BinBaseCsvData binBaseCsvData) {

@@ -11,7 +11,8 @@ import java.util.Map;
 
 import static com.rbkmoney.binbase.util.CardTypeConverter.convertToCardType;
 
-public class BinBaseXmlProcessor extends BinBaseItemProcessor implements ItemProcessor<BinBaseXmlData, Map.Entry<BinData, Range<Long>>> {
+public class BinBaseXmlProcessor extends BinBaseItemProcessor
+        implements ItemProcessor<BinBaseXmlData, Map.Entry<BinData, Range<Long>>> {
 
     @Override
     public Map.Entry<BinData, Range<Long>> process(BinBaseXmlData binBaseXmlData) {

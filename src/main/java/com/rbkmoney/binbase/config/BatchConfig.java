@@ -1,11 +1,11 @@
 package com.rbkmoney.binbase.config;
 
 import com.google.common.collect.Range;
-import com.rbkmoney.binbase.batch.BinBaseXmlData;
 import com.rbkmoney.binbase.batch.BinBaseCsvData;
+import com.rbkmoney.binbase.batch.BinBaseXmlData;
 import com.rbkmoney.binbase.batch.listener.DefaultChunkListener;
-import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
 import com.rbkmoney.binbase.batch.processor.BinBaseCsvProcessor;
+import com.rbkmoney.binbase.batch.processor.BinBaseXmlProcessor;
 import com.rbkmoney.binbase.batch.processor.classifier.ProcessorClassifier;
 import com.rbkmoney.binbase.batch.reader.BinDataItemReader;
 import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
@@ -15,10 +15,7 @@ import com.rbkmoney.binbase.service.BinbaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
 import org.springframework.batch.item.file.builder.MultiResourceItemReaderBuilder;
@@ -46,8 +43,8 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BinbaseService binbaseService;
-    private final String CSV_DELIMITER = ";";
-    private final String[] FILE_CSV_FIELDS = new String[]{
+    private static final String CSV_DELIMITER = ";";
+    private static final String[] FILE_CSV_FIELDS = new String[]{
             "bin", "brand", "bank", "type", "category", "isoname", "isoa2", "isoa3",
             "isonumber", "url", "phone", "bin_length", "affiliation", "mark"
     };
@@ -70,9 +67,9 @@ public class BatchConfig {
 
     @Bean
     public BinDataItemReader binBaseDataBinDataItemReader() {
-        BinDataItemReader binDataItemReader = new BinDataItemReader(buildBinBaseXmlReader(), buildBinBasePsbCsvReader());
-        binDataItemReader.setClassifier(new ResourceClassifier(
-                buildBinBaseXmlReader(), buildBinBasePsbCsvReader()));
+        BinDataItemReader binDataItemReader =
+                new BinDataItemReader(buildBinBaseXmlReader(), buildBinBasePsbCsvReader());
+        binDataItemReader.setClassifier(new ResourceClassifier(buildBinBaseXmlReader(), buildBinBasePsbCsvReader()));
         return binDataItemReader;
     }
 
@@ -121,7 +118,7 @@ public class BatchConfig {
     @Bean
     public ClassifierCompositeItemProcessor compositeProcessor() {
         return new ClassifierCompositeItemProcessorBuilder()
-                .classifier(new ProcessorClassifier( new BinBaseXmlProcessor(), new BinBaseCsvProcessor()))
+                .classifier(new ProcessorClassifier(new BinBaseXmlProcessor(), new BinBaseCsvProcessor()))
                 .build();
     }
 

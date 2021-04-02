@@ -70,9 +70,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
     }
 
     private ResponseData toResponseData(Map.Entry<Long, BinData> binDataWithVersion) {
-        long versionId = binDataWithVersion.getKey();
         BinData binData = binDataWithVersion.getValue();
-
         com.rbkmoney.damsel.binbase.BinData damselBinData = new com.rbkmoney.damsel.binbase.BinData();
         damselBinData.setBinDataId(Value.i(binData.getId()));
         damselBinData.setPaymentSystem(binData.getPaymentSystem());
@@ -88,7 +86,7 @@ public class BinbaseHandler implements BinbaseSrv.Iface {
                         .map(CountryCode::getAlpha3)
                         .orElse(null));
         damselBinData.setCategory(binData.getCategory());
-
+        long versionId = binDataWithVersion.getKey();
         return new ResponseData(damselBinData, versionId);
     }
 

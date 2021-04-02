@@ -24,7 +24,8 @@ public class BinbaseServlet extends GenericServlet {
     }
 
     @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse)
+            throws ServletException, IOException {
         thriftServlet.service(servletRequest, servletResponse);
     }
 }

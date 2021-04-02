@@ -47,10 +47,12 @@ public class BinbaseServiceImpl implements BinbaseService {
             if (binDataWithVersion == null) {
                 throw new BinNotFoundException(String.format("Bin data not found, pan='%s'", formatPan(pan)));
             }
-            log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'", formatPan(pan), binDataWithVersion);
+            log.info("Bin data have been retrieved, pan='{}', binDataWithVersion='{}'",
+                    formatPan(pan), binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by card pan, pan='%s'", formatPan(pan)), ex);
+            throw new StorageException(String.format("Failed to get bin data by card pan, pan='%s'",
+                    formatPan(pan)), ex);
         }
     }
 
@@ -59,14 +61,19 @@ public class BinbaseServiceImpl implements BinbaseService {
             throws BinNotFoundException, StorageException, IllegalArgumentException {
         try {
             log.info("Trying to get bin data by pan and version, pan='{}', version='{}'", formatPan(pan), version);
-            Map.Entry<Long, BinData> binDataWithVersion = binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
+            Map.Entry<Long, BinData> binDataWithVersion =
+                    binDataDao.getBinDataByCardPanAndVersion(toLongValue(pan), version);
             if (binDataWithVersion == null) {
-                throw new BinNotFoundException(String.format("Bin data not found, pan='%s', version='%d'", formatPan(pan), version));
+                throw new BinNotFoundException(String.format("Bin data not found, pan='%s', version='%d'",
+                        formatPan(pan), version));
             }
-            log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'", formatPan(pan), version, binDataWithVersion);
+            log.info("Bin data have been retrieved, pan='{}', version='{}', binDataWithVersion='{}'",
+                    formatPan(pan), version, binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by card pan and version, pan='%s', version='%d'", formatPan(pan), version), ex);
+            throw new StorageException(
+                    String.format("Failed to get bin data by card pan and version, pan='%s', version='%d'",
+                            formatPan(pan), version), ex);
         }
     }
 
@@ -79,10 +86,13 @@ public class BinbaseServiceImpl implements BinbaseService {
             if (binDataWithVersion == null) {
                 throw new BinNotFoundException(String.format("Bin data not found, binDataId='%s'", binDataId));
             }
-            log.info("Bin data have been retrieved, binDataId='{}', binDataWithVersion='{}'", binDataId, binDataWithVersion);
+            log.info("Bin data have been retrieved, binDataId='{}', binDataWithVersion='{}'",
+                    binDataId, binDataWithVersion);
             return binDataWithVersion;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get bin data by binDataId, binDataId='%d'", binDataId), ex);
+            throw new StorageException(
+                    String.format("Failed to get bin data by binDataId, binDataId='%d'", binDataId),
+                    ex);
         }
     }
 
@@ -119,14 +129,20 @@ public class BinbaseServiceImpl implements BinbaseService {
                     Range<Long> newIntersectRange = intersectionRange.getRange().intersection(range);
                     intersectionRanges.add(newIntersectRange);
                     if (intersectionRange.getBinDataId().equals(binDataId)) {
-                        log.info("Range of intersections with same data was found, binData='{}', range='{}', intersectionRange='{}'. Skipped...", binData, range, intersectionRange);
+                        log.info("Range of intersections with same data was found, " +
+                                "binData='{}', range='{}', intersectionRange='{}'. Skipped...",
+                                binData, range, intersectionRange);
                         continue;
                     }
-                    newBinRanges.add(new BinRange(newIntersectRange, intersectionRange.getVersionId() + 1L, binDataId));
+                    newBinRanges.add(new BinRange(
+                            newIntersectRange,
+                            intersectionRange.getVersionId() + 1L,
+                            binDataId));
                 }
             }
             if (!newBinRanges.isEmpty()) {
-                log.info("Ranges with new version was created, binData='{}', range='{}', rangesWithNewVersion='{}'", binData, range, newBinRanges);
+                log.info("Ranges with new version was created, binData='{}', range='{}', rangesWithNewVersion='{}'",
+                        binData, range, newBinRanges);
             }
 
             List<BinRange> otherRanges = BinRangeUtil.subtractFromRange(range, intersectionRanges).stream()
@@ -134,18 +150,22 @@ public class BinbaseServiceImpl implements BinbaseService {
                             subtractRange -> new BinRange(subtractRange, 1L, binDataId)
                     ).collect(Collectors.toList());
             if (!otherRanges.isEmpty()) {
-                log.info("New ranges was created, binData='{}', range='{}', newRanges='{}'", binData, range, otherRanges);
+                log.info("New ranges was created, binData='{}', range='{}', newRanges='{}'",
+                        binData, range, otherRanges);
                 newBinRanges.addAll(otherRanges);
             }
 
             if (!newBinRanges.isEmpty()) {
                 binRangeDao.save(newBinRanges);
-                log.info("Bin range have been saved, binData='{}', range='{}', binRanges='{}'", binData, range, newBinRanges);
+                log.info("Bin range have been saved, binData='{}', range='{}', binRanges='{}'",
+                        binData, range, newBinRanges);
             } else {
-                log.info("No new ranges were created, nothing to save, binData='{}', range='{}'", binData, range);
+                log.info("No new ranges were created, nothing to save, binData='{}', range='{}'",
+                        binData, range);
             }
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to save range, binData='%s', range='%s'", binData, range), ex);
+            throw new StorageException(String.format("Failed to save range, binData='%s', range='%s'",
+                    binData, range), ex);
         }
     }
 
@@ -169,11 +189,15 @@ public class BinbaseServiceImpl implements BinbaseService {
             throws StorageException {
         try {
             log.info("Trying to get last ranges of intersections, range='{}'", range);
-            List<BinRange> lastIntersectionRanges = BinRangeUtil.getLastIntersectionRanges(binRangeDao.getIntersectionRanges(range));
-            log.info("Last ranges of intersections have been retrieved, range='{}', lastIntersectionRanges='{}'", range, lastIntersectionRanges);
+            List<BinRange> lastIntersectionRanges =
+                    BinRangeUtil.getLastIntersectionRanges(binRangeDao.getIntersectionRanges(range));
+            log.info("Last ranges of intersections have been retrieved, range='{}', lastIntersectionRanges='{}'",
+                    range, lastIntersectionRanges);
             return lastIntersectionRanges;
         } catch (DaoException ex) {
-            throw new StorageException(String.format("Failed to get last ranges of intersections, range='%s'", range), ex);
+            throw new StorageException(
+                    String.format("Failed to get last ranges of intersections, range='%s'", range),
+                    ex);
         }
     }
 

@@ -2,8 +2,10 @@ package com.rbkmoney.binbase.batch;
 
 import com.rbkmoney.binbase.AbstractIntegrationTest;
 import com.rbkmoney.binbase.domain.CountryCode;
+import com.rbkmoney.binbase.exception.BinNotFoundException;
 import com.rbkmoney.damsel.binbase.*;
 import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import java.net.URISyntaxException;
 import static com.rbkmoney.binbase.domain.CountryCode.getByAlpha3Code;
 import static org.junit.Assert.*;
 
-
+@Slf4j
 @TestPropertySource(properties = "batch.file_path=classpath:/data/binbase/case1")
 public class BatchUploadTest extends AbstractIntegrationTest {
 
@@ -71,19 +73,19 @@ public class BatchUploadTest extends AbstractIntegrationTest {
             binbaseClient.lookup("999999#Q", Reference.last(new Last()));
             fail();
         } catch (BinNotFound ex) {
-
+            log.debug("BinNotFound, {}", ex);
         }
         try {
             binbaseClient.lookup("99999", Reference.last(new Last()));
             fail();
         } catch (BinNotFound ex) {
-
+            log.debug("BinNotFound, {}", ex);
         }
         try {
             binbaseClient.lookup("99999999999999999999999999999", Reference.last(new Last()));
             fail();
         } catch (BinNotFound ex) {
-
+            log.debug("BinNotFound, {}", ex);
         }
     }
 

@@ -12,7 +12,8 @@ import org.springframework.classify.Classifier;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class ProcessorClassifier<T> implements Classifier<BinBaseData, ItemProcessor<?, Map.Entry<BinData, Range<Long>>>> {
+public class ProcessorClassifier<T>
+        implements Classifier<BinBaseData, ItemProcessor<?, Map.Entry<BinData, Range<Long>>>> {
 
     private final BinBaseXmlProcessor binBaseXmlProcessor;
     private final BinBaseCsvProcessor binBaseCsvProcessor;
