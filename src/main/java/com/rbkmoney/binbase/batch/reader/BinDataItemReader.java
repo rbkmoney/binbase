@@ -1,7 +1,6 @@
 package com.rbkmoney.binbase.batch.reader;
 
 import com.rbkmoney.binbase.batch.reader.classifier.ResourceClassifier;
-import com.rbkmoney.binbase.exception.ExtensionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +13,8 @@ import org.springframework.core.io.Resource;
 
 import java.util.Objects;
 
-import static com.rbkmoney.binbase.util.BinBaseConstant.*;
+import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_EXTENSION_CSV;
+import static com.rbkmoney.binbase.util.BinBaseConstant.FILE_EXTENSION_XML;
 
 @RequiredArgsConstructor
 public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T> {
@@ -54,7 +54,8 @@ public class BinDataItemReader<T> implements ResourceAwareItemReaderItemStream<T
                 flatFileItemReader.setResource(resource);
                 flatFileItemReader.open(executionContext);
                 break;
-            default: throw new ExtensionNotFoundException("File extension to open not found");
+            default:
+                throw new IllegalArgumentException("Unsupported file format: " + resource.getFilename());
         }
     }
 
